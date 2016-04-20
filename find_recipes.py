@@ -1,8 +1,10 @@
 '''
 Created on Apr 19, 2016
-
 @author: saarnii1
 '''
+# -*- coding: utf-8 -*-
+import io
+
 class read_inventory:
     '''
     Katsotaan varasto läpi eli selvitetään mitä kaikkia raaka-aineita on käytettävissä
