@@ -9,14 +9,26 @@ from recipe import Recipe
 class Ingredient:
     
     def __init__(self, ingredient_name, density, allergen, recipes):
-        self.ingredient_name = ingredient_name
-        self.density = density
-        self.allergen = allergen
-        self.recipes = recipes
+        self.name = None
+        self.density = None
+        self.recipes = None
+        self.allergens = []
         
-    def chance_amount(self, amount, unit):
-        '''
-        '''
-    def add_recipes(self, name_recipe, Recipe):
-        Recipe.name_recipe = name_recipe
+    def set_name(self, name):
+        self.name = name
+
+    def set_density(self, density):
+        self.density = density
+        
+    
+    
+    def get_name(self):
+        return self.name
+    def get_density(self):
+        return self.density
+    def get_recipes(self):
+        return self.recipes
+    def get_allergens(self):
+        return self.allergens
+    
     
