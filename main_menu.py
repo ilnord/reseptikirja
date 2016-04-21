@@ -21,7 +21,7 @@ class Main(object):
             print(i)
         
         while True:
-            user_input = self.ask_for_input("Mita haluaisit tehda?  ")
+            user_input = self.ask_for_input("Mitä haluaisit tehdä?  ")
             if user_input >= 0 and user_input < len(menu_options):
                 return user_input
             else:
@@ -51,7 +51,7 @@ class Main(object):
         while True:
             user_input = self.run_menu(self.search_menu_options)
             if user_input == 1:
-                print("Etsi tehtavissa olevat reseptit")
+                print("Etsi tehtävissä olevat reseptit")
             elif user_input == 2:
                 print("Etsi ")
             elif user_input == 3:
