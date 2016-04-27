@@ -6,7 +6,7 @@ Created on 20.4.2016
 # -*- coding: utf-8 -*-
 class Recipe:
     
-    def __init__(self, name, ingredients, instructions):
+    def __init__(self):
         self.name = None
         self.instructions = []
         self.ingredients = []
@@ -19,6 +19,13 @@ class Recipe:
         
     def set_ingredients(self, ingredients):
         self.ingredients.append(ingredients)
+        
+    def set_outcome_amount(self, outcomeSize):
+        self.outcomeSize = outcomeSize
+        
+    def set_outcome_unit(self, outcomeUnit):
+        self.outcomeUnit = outcomeUnit
+
         
     def get_name(self):
         return self.name

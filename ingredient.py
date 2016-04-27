@@ -8,7 +8,7 @@ from recipe import Recipe
 
 class Ingredient:
     
-    def __init__(self, ingredient_name, density, allergen, recipes):
+    def __init__(self):
         self.name = None
         self.density = None
         self.recipes = None
@@ -16,11 +16,12 @@ class Ingredient:
         
     def set_name(self, name):
         self.name = name
-
     def set_density(self, density):
         self.density = density
-        
-    
+    def set_allergen(self, allergen):
+        self.allergens.append(allergen)
+    def set_recipe(self, Recipe):
+        self.recipes =Recipe
     
     def get_name(self):
         return self.name
@@ -31,4 +32,9 @@ class Ingredient:
     def get_allergens(self):
         return self.allergens
     
+class Ingredient_container:
+    def __init__(self):
+        self.ingredient = None
+        self.quantity = None
+        self.unit = None
     

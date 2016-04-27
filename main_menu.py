@@ -14,7 +14,8 @@ class Main(object):
         self.inventory_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa varasto", "0. Takaisin"]
         self.recipes_menu_options = ["1. Etsi tietty resepti", "2. Listaa reseptit", "0. Takaisin"]
         self.ingredients_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa raaka-aineet", "0. Takaisin"]
-    
+        self.Test_mode = False
+        
     def run_menu(self, menu_options):
         
         for i in menu_options:
@@ -28,7 +29,9 @@ class Main(object):
                 print("Tuntematon arvo")
                 
     def ask_for_input(self, question):
-        user_input = input(question) 
+        user_input = input(question)
+        if self.TestMode:
+            user_input = question
         user_input = int(user_input)  
         return user_input
     
