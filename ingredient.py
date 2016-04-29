@@ -6,6 +6,16 @@ Created on 20.4.2016
 # -*- coding: utf-8 -*-
 from recipe import Recipe
 
+G = 0
+KG = 1
+TSP = 2
+TBSP = 3
+CL = 4
+DL = 5
+L = 6
+PIECE = 7
+PORTION = 8
+
 class Ingredient:
     
     def __init__(self):
@@ -17,7 +27,11 @@ class Ingredient:
     def set_name(self, name):
         self.name = name
     def set_density(self, density):
-        self.density = density
+        try:
+            self.density = float(density)
+            return True
+        except ValueError:
+            return False
     def set_allergen(self, allergen):
         self.allergens.append(allergen)
     def set_recipe(self, Recipe):
@@ -38,3 +52,31 @@ class Ingredient_container:
         self.quantity = None
         self.unit = None
     
+    def set_ingredient(self,ingredient,ingredientsList):
+        
+        for i in ingredientsList:
+                if i.get_name().strip().lower() == ingredient.lower():
+                    self.ingredient = i
+                    return True
+                else:
+                    # Ei raaka-ainetta talla nimella
+                    pass
+        return False
+
+    def set_amount(self,amount):
+        try:
+            self.amount = int(amount)
+            return True
+        except ValueError:
+            return False
+    
+    def set_unit(self, unit):
+        self.unit = unit
+        
+        
+    def get_ingredients(self):
+        return self.ingredient
+    def get_amount(self):
+        return self.amount
+    def get_unit(self):
+        return self.unit

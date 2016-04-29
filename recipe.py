@@ -17,8 +17,9 @@ class Recipe:
     def set_instructions(self, instructions):
         self.instructions.append(instructions)
         
-    def set_ingredients(self, ingredients):
-        self.ingredients.append(ingredients)
+    def add_ingredients(self, Ingredient_container):
+        self.ingredients.append(Ingredient_container)
+
         
     def set_outcome_amount(self, outcomeSize):
         self.outcomeSize = outcomeSize
