@@ -37,7 +37,6 @@ class Test(unittest.TestCase):
         wanted_unit = G
         amount = 3
         density = 1
-        
         received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, amount, density)
         self.assertEqual(3000, received_amount, "Saatu maara ei tasmaa")
         
@@ -47,9 +46,31 @@ class Test(unittest.TestCase):
         amount = 50
         density = 1
         
-        received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, density, amount)
+        received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, amount, density)
         self.assertEqual(0.75, received_amount, "Saatu maara ei tasmaa")
-
+    
+    def test_transfer_mass_to_volume(self):
+        unit = G
+        wanted_unit = DL
+        amount = 30
+        density = 2
+        
+        received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, amount, density)
+        self.assertEqual(0.15, received_amount, "Saatu maara ei tasmaa")
+    
+    def test_transfer_volume_to_mass(self):
+        unit = L
+        wanted_unit = G
+        amount = 0.01
+        density = 4
+        
+        received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, amount, density)
+        self.assertEqual(40, received_amount, "Saatu maara ei tasmaa")
+        
+     
+########################################################################################################################################
+        
+    
     def test_read_ingredients_from_file(self):
         
         self.input_file = StringIO()
