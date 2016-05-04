@@ -21,11 +21,11 @@ class Recipe:
         self.ingredients.append(Ingredient_container)
 
         
-    def set_outcome_amount(self, outcomeSize):
-        self.outcomeSize = outcomeSize
+    def set_outcome_amount(self, outcome_amount):
+        self.outcome_amount = outcome_amount
         
-    def set_outcome_unit(self, outcomeUnit):
-        self.outcomeUnit = outcomeUnit
+    def set_outcome_unit(self, outcome_unit):
+        self.outcome_unit = outcome_unit
 
         
     def get_name(self):
@@ -34,3 +34,7 @@ class Recipe:
         return self.instructions
     def get_ingredients(self):
         return self.ingredients
+    def get_outcome_unit(self):
+        return self.outcome_unit
+    def get_outcome_amount(self):
+        return self.outcome_amount

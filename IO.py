@@ -118,12 +118,12 @@ class IO(object):
                         elif header_parts[0].strip().lower() == 'name':
                             self.recipe.set_name(header_parts[1].strip())
                             self.name = header_parts[1].strip()
-                            print(self.recipe.get_name())
+                            #print(self.recipe.get_name())
                             
                         elif header_parts[0].strip().lower() == 'instructions':
                             self.recipe.set_instructions(header_parts[1].strip())
                             self.instructions = True
-                            print(self.recipe.get_instructions())
+                            #print(self.recipe.get_instructions())
                             
                             
                         elif header_parts[0].strip().lower() == 'outcome':
@@ -131,6 +131,8 @@ class IO(object):
                             self.recipe.set_outcome_amount(header_parts[1].strip())
                             self.recipe.set_outcome_unit(header_parts[2].strip())
                             self.outcome = True
+                            #print(self.recipe.get_outcome_amount())
+                            #print(self.recipe.get_outcome_unit())
                             
                         elif header_parts[0].strip().lower() == 'ingredient':
                             if len(header_parts) != 4:
@@ -145,12 +147,13 @@ class IO(object):
                             self.ingredient_container.set_amount(header_parts[2].strip())
                             self.ingredient_container.set_unit(header_parts[3].strip())
                             self.recipe.add_ingredients(self.ingredient_container)
-                        
+                            #print(self.ingredient_container.get_amount())
+                            #print(self.ingredient_container.get_unit())
                                 
                         current_line = input_data.readline()
                         header_parts = current_line.split(":")
                         
-                    if not self.name or not self.instructions or not self.ingedients or not self.outcome:
+                    if not self.name or not self.instructions or not self.ingredients or not self.outcome:
                         if self.name:
                             print("Seuraavan reseptin lukeminen epaonnistui:", self.name)
                         else:
@@ -158,7 +161,7 @@ class IO(object):
                         self.failed_reads += 1
                             
                     else:
-                        self.recipes_list.append(self.ingredient)
+                        self.recipes_list.append(self.recipe)
                         self.name = False
                         self.instructions = False
                         self.ingredients = False
@@ -174,7 +177,7 @@ class IO(object):
             print("Tiedoston avaaminen ei onnistunut")
         
 
-'''    
+    
     def read_storage_from_file(self, input_data, ingredients_list):
         self.success = None
         self.storage_list = []
@@ -185,64 +188,38 @@ class IO(object):
         try:
             #input_data = open(filename, 'w')
             current_line = input_data.readline()
-            header_parts = current_line.split(" ")
+            header_parts = current_line.split(";")
             
             if header_parts[0].strip() != "STORAGELIST" :   
                 raise OSError("Tuntematon tiedostotyyppi")
             
             current_line = input_data.readline()
-            header_parts = current_line.split(" ")
+            header_parts = current_line.split(";")
             
             while current_line != '': 
                 if len(header_parts) > 2:
-                    self.ingedient_container = 
-                    current_line = input_data.readline()
-                    header_parts = current_line.split(":")
+                    self.ingredient_container = Ingredient_container()
                     
-                    while current_line != '':
-                        if current_line[0] == '#':
-                            break
-                        
-                        elif header_parts[0].strip().lower() == 'name':
-                            self.recipe.set_name(header_parts[1].strip())
-                            self.name = header_parts[1].strip()
-                            
-                        elif header_parts[0].strip().lower() == 'instructions':
-                            self.recipe.set_instructions(header_parts[1].strip())
-                            self.instructions = True
-                            
-                        elif header_parts[0].strip().lower() == 'recipe':
-                            self.ingredient.set_recipe(header_parts[1].strip())
-                            self.instructions = True
-                            
-                        elif header_parts[0].strip().lower() == 'outcome':
-                            if len(header_parts) != 3: break
-                            self.recipe.set_outcome_amount(header_parts[1].strip())
-                            self.recipe.set_outcome_unit(header_parts[2].strip())
-                            self.outcome = True
-                        
-                                
-                        current_line = input_data.readline()
-                        header_parts = current_line.split(":")
-                        
-                    if not self.name or not self.instructions or not self.ingedients or not self.outcome:
-                        if self.name:
-                            print("Seuraavan reseptin lukeminen epaonnistui:", self.name)
-                        else:
-                            print("Reseptin luku epaonnistui")
-                            
-                    else:
-                        self.recipes_list.append(self.ingredient)
-                        self.name = False
-                        self.instructions = False
+                    if not self.ingredient_container.set_ingredient(header_parts[0].strip(), ingredients_list):
                         self.ingredients = False
-                        self.outcome = False
-                else:
-                    current_line = input_data.readline()
-                    header_parts = current_line.split(" ")
-                    
-            #input_data.close()     
-            return self.resipes_list
+                    else:
+                        self.ingredient_container.set_amount(header_parts[1].strip())
+                        self.ingredient_container.set_unit(header_parts[2].strip())
+                        self.success = True
+                        
+                if not self.success:
+                    self.failed_reads += 1
+                    print("varastorivin luku epaonnitui")
+                    self.success = None
+                elif self.success:
+                    self.succesfull_reads += 1
+                    self.storage_list.append(self.ingredient_container)
+                    self.success = None
+                current_line = input_data.readline()
+                header_parts = current_line.split(";")
+                
+            return self.storage_list, self.succesfull_reads, self.failed_reads
+        
         except OSError:
-            print("Tiedoston avaaminen ei onnistunut")  
-'''
+            print("ketuiks meni")
+                    

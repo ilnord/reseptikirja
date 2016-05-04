@@ -49,12 +49,12 @@ class Ingredient:
 class Ingredient_container:
     def __init__(self):
         self.ingredient = None
-        self.quantity = None
+        self.amount = None
         self.unit = None
     
-    def set_ingredient(self,ingredient,ingredientsList):
+    def set_ingredient(self,ingredient,ingredients_list):
         
-        for i in ingredientsList:
+        for i in ingredients_list:
                 if i.get_name().strip().lower() == ingredient.lower():
                     self.ingredient = i
                     return True

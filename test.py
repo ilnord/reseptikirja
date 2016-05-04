@@ -102,7 +102,7 @@ class Test(unittest.TestCase):
             self.assertEqual(3, ingredient.get_density(), "Raaka-aineen tiheys ei tasmaa")
             self.assertEqual(["Kala","Ruodot"], ingredient.get_allergens(), "")
 
-'''
+
     def test_read_recipes_from_file(self):
          
         self.input_file = StringIO()
@@ -110,8 +110,8 @@ class Test(unittest.TestCase):
         self.input_file.write('#Recipe\n')
         self.input_file.write('\nName            : Paistettu riisi\n')
         self.input_file.write('\nOutcome            : 4: portion\n')
-        self.input_file.write('\nInstruction     : Keita riisi\n')
-        self.input_file.write('\nInstruction     : Paista riisi')
+        self.input_file.write('\nInstructions     : Keita riisi\n')
+        self.input_file.write('\nInstructions     : Paista riisi')
         self.input_file.write('\nIngredient     : riisi : 500 : g')
         self.input_file.write('\nIngredient     : vesi : 1 : l')
          
@@ -139,5 +139,35 @@ class Test(unittest.TestCase):
             self.assertEqual("Paistettu riisi", recipe.get_name(), "Raaka-aineen nimi ei tasmaa")
             self.assertEqual(["Keita riisi", "Paista riisi"], recipe.get_instructions(), "Ohjeet eivat tasmaa")
             self.assertIs(ingredient1, recipe.get_ingredients()[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua oliota")
-            self.assertIs(ingredient2, recipe.get()[1].get_ingredients(), "Toinen raaka-aine ei vastaa haluttua oliota")
-'''
+            self.assertIs(ingredient2, recipe.get_ingredients()[1].get_ingredients(), "Toinen raaka-aine ei vastaa haluttua oliota")
+    
+    def test_read_storage_from_file(self):
+         
+        self.input_file = StringIO()
+        self.input_file.write('STORAGELIST\n')
+        self.input_file.write('riisi;10;kg\n')
+        self.input_file.write('raakisett\n')
+        self.input_file.write('mehu;1;dl\n')
+
+        self.input_file.seek(0, 0) 
+        
+        ingredient1 = Ingredient()
+        ingredient1.set_name("riisi")
+        ingredient1.set_density(0.5)
+        
+        ingredient2 = Ingredient()
+        ingredient2.set_name("mehu")
+        ingredient2.set_density(1)
+
+        
+        ingredients_list = [ingredient1,ingredient2]
+ 
+        storage_list,successfull_reads, failed_reads = self.IO.read_storage_from_file(self.input_file,ingredients_list)
+        self.input_file.close()
+        self.assertEqual(2,successfull_reads,"Onnistuineiden lukujen maara ei tasmaa")
+        self.assertEqual(1, failed_reads, "Epaonnistuneiden lukujen maara ei tasmaa")
+        self.assertEqual(successfull_reads, len(storage_list), "Listan pituus ei vastaa onnistuneita lukuja")
+        
+        if len(storage_list) > 0:
+            self.assertIs(ingredient1, storage_list[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua olioita")
+            self.assertIs(ingredient2, storage_list[1].get_ingredients(), "Toinen raaka-aine ei tasmaa haluttua oliota")
