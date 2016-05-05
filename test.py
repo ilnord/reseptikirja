@@ -33,7 +33,6 @@ class Test(unittest.TestCase):
         #IO setUp
         self.IO = IO()
         self.Unit_transfer = Unit_transfer()
-        self.Find_recipes = Find_recipes
         
     def test_transfer_mass_to_mass(self):
         unit = KG 
@@ -188,14 +187,35 @@ class Test(unittest.TestCase):
             self.assertIs(ingredient2, storage_list[1].get_ingredients(), "Toinen raaka-aine ei tasmaa haluttua oliota")
             
             
-###################################################################################################################
-
-    def test_check_for_ingredients(self):
-        
+    def test_read_storage_from_actual_file(self):
         ingredient1 = Ingredient()
         ingredient1.set_name("riisi")
         ingredient1.set_density(0.5)
-        ingredient1
+        
+        ingredient2 = Ingredient()
+        ingredient2.set_name("mehu")
+        ingredient2.set_density(1)
+        
+        ingredients_list = [ingredient1,ingredient2]
+        
+        f = open('Storage.txt', 'r')
+        storage_list, successfull_reads, failed_reads = self.IO.read_storage_from_file(f, ingredients_list)
+        f.close()
+        
+
+        self.assertEqual(2,successfull_reads,"Onnistuineiden lukujen maara ei tasmaa")
+        self.assertEqual(successfull_reads, len(storage_list), "Listan pituus ei vastaa onnistuneita lukuja")
+        
+        if len(storage_list) > 0:
+            self.assertIs(ingredient1, storage_list[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua olioita")
+            self.assertIs(ingredient2, storage_list[1].get_ingredients(), "Toinen raaka-aine ei tasmaa haluttua oliota")
+###################################################################################################################
+
+    def test_check_for_ingredients(self):
+        self.Find_recipes = Find_recipes()
+        ingredient1 = Ingredient()
+        ingredient1.set_name("riisi")
+        ingredient1.set_density(0.5)
         
         ingredient2 = Ingredient()
         ingredient2.set_name("vesi")
@@ -203,8 +223,10 @@ class Test(unittest.TestCase):
         
         ingredients_list = [ingredient1,ingredient2]
         
-        Ingredient_container.set_ingredient(self, ingredient1, ingredients_list)
-        Ingredient_container.set_ingredient(self, ingredient2, ingredients_list)
+        ingredient_container = Ingredient_container()
+        ingredient_container2 = Ingredient_container()
+        ingredient_container.set_ingredient(ingredient1.get_name(), ingredients_list)
+        ingredient_container2.set_ingredient(ingredient2.get_name(), ingredients_list)
         
 
         recipe1 = Recipe()
@@ -213,7 +235,7 @@ class Test(unittest.TestCase):
         recipe1.set_outcome_unit("dl")
         recipe1.set_instructions("keita riisi")
         recipe1.set_instructions("paista riisi")
-        recipe1.add_ingredients(Ingredient_container)
+        recipe1.add_ingredients(ingredient_container)
 
         
         ingredients_found = self.Find_recipes.check_for_ingredients(recipe1)

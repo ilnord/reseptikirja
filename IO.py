@@ -9,6 +9,7 @@ from recipe import Recipe
 class IO(object):
 
     def read_ingredients_from_file(self, input_data):
+        #Lukee raaka-aineet tiedostosta ja palauttaa ne listana olioita
         self.name = False
         self.density = False
         self.ingredient_list = []
@@ -85,6 +86,8 @@ class IO(object):
             
             
     def read_recipes_from_file(self, input_data, ingredients_list):
+        #Lukee reseptit tiedostosta ja palauttaa ne listana olioita
+        
         self.name = False
         self.instructions = False
         self.ingedients = False
@@ -179,6 +182,8 @@ class IO(object):
 
     
     def read_storage_from_file(self, input_data, ingredients_list):
+        #Lukee varaston lapi ja palauttaa sen listana oloita
+        
         self.success = None
         self.storage_list = []
         self.succesfull_reads = 0
@@ -199,7 +204,6 @@ class IO(object):
             while current_line != '': 
                 if len(header_parts) > 2:
                     self.ingredient_container = Ingredient_container()
-                    
                     if not self.ingredient_container.set_ingredient(header_parts[0].strip(), ingredients_list):
                         self.ingredients = False
                     else:
