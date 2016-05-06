@@ -64,13 +64,15 @@ class Find_recipes:
         
         for recipe_ingredient in recipe.get_ingredients():
             for storage_ingredient in self.storage_list:
+                print (recipe_ingredient)
+                print (storage_ingredient)
                 if recipe_ingredient.get_ingredients() is storage_ingredient.get_ingredients():
                     if self.check_ingredient_amount(recipe_ingredient, storage_ingredient):
                         ingredients_found += 1
                     #elif recipe_ingredient.get_recipes() != None:
                         #if self.check_for_ingredients(recipe_ingredient.get_recipes()) \
                         #== len(recipe_ingredient.get_recipes().get_ingredients()):
-                         #   ingredients_found += 1
+                        #   ingredients_found += 1
                     break
         return ingredients_found
                     

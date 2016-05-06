@@ -105,7 +105,7 @@ class Test(unittest.TestCase):
             self.assertEqual(["Kala","Ruodot"], ingredient.get_allergens(), "")
             
     def test_read_ingredients_from_actual_file(self):
-        f = open('Ingredientlist.txt', 'r')
+        f = open('Ingredientlist_test.txt', 'r')
         ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
         f.close()
         self.assertEqual(1, successfull_reads,"Onnistuneiden lukujen maara ei tasmaa")
@@ -198,7 +198,7 @@ class Test(unittest.TestCase):
         
         ingredients_list = [ingredient1,ingredient2]
         
-        f = open('Storage.txt', 'r')
+        f = open('Storage_test.txt', 'r')
         storage_list, successfull_reads, failed_reads = self.IO.read_storage_from_file(f, ingredients_list)
         f.close()
         
@@ -212,7 +212,9 @@ class Test(unittest.TestCase):
 ###################################################################################################################
 
     def test_check_for_ingredients(self):
+        
         self.Find_recipes = Find_recipes()
+        
         ingredient1 = Ingredient()
         ingredient1.set_name("riisi")
         ingredient1.set_density(0.5)
@@ -221,7 +223,9 @@ class Test(unittest.TestCase):
         ingredient2.set_name("vesi")
         ingredient2.set_density(1)
         
-        ingredients_list = [ingredient1,ingredient2]
+        f = open('Ingredientlist_test.txt', 'r')
+        ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
+        f.close()
         
         ingredient_container = Ingredient_container()
         ingredient_container2 = Ingredient_container()
