@@ -10,16 +10,28 @@ INGREDIENTLIST
 #Ingredient
 Name		:riisi
 Density		:0.5
-Recipe		:paistettu riisi
+Recipe		:
 Allergen	:tarkkelys
 
 #Ingredient
 Name		:vesi
 Density		:1
-Recipe		:paistettu riisi
+Recipe		:
 
 #Ingredient
 Name		:mehu
 Density		:1.2
-Recipe		:mehukeitto
+Recipe		:mehu
+Allergen	:mansikka
+
+#Ingredient
+Name		:mehutiiviste
+Density		:2.5
+Recipe		:
+Allergen	:mansikka
+
+#Ingredient
+Name		:mansikka
+Density		:1.5
+Recipe		:
 Allergen	:mansikka

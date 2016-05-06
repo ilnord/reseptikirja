@@ -53,7 +53,6 @@ class IO(object):
                             
                         elif header_parts[0].strip().lower() == 'recipe':
                             self.ingredient.set_recipe(header_parts[1].strip())
-                            self.instructions = True
                             
                         elif header_parts[0].strip().lower() == 'allergen':
                             self.ingredient.set_allergen(header_parts[1].strip()) 

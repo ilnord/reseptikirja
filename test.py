@@ -240,9 +240,8 @@ class Test(unittest.TestCase):
             self.assertIs(ingredient2, storage_list[1].get_ingredients(), "Toinen raaka-aine ei tasmaa haluttua oliota")
 ###################################################################################################################
 
-    def test_check_for_ingredients(self):
+    def test_check_for_ingredients_all_ingredients_available(self):
         
-        print("asdasdasdasdasdasdasd")
         self.Find_recipes = Find_recipes()
         '''
         ingredient1 = Ingredient()
@@ -287,5 +286,21 @@ class Test(unittest.TestCase):
         
         recipe = recipes_list[0]
         
+        ingredients_found = self.Find_recipes.check_for_ingredients(recipe)
+        self.assertEqual(2, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")
+        
+    def test_check_for_ingredients_more_ingredients_made_from_storage(self):
+        self.Find_recipes = Find_recipes()
+        
+        f1 = open('Ingredientlist.txt', 'r')
+        ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
+        f1.close()
+        
+        f2 = open('Recipelist.txt', 'r')
+        recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
+        f2.close()
+        
+        recipe = recipes_list[2]
+        print(recipe.get_name())
         ingredients_found = self.Find_recipes.check_for_ingredients(recipe)
         self.assertEqual(2, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")

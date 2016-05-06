@@ -26,23 +26,38 @@ class Ingredient:
         
     def set_name(self, name):
         self.name = name
+    
     def set_density(self, density):
         try:
             self.density = float(density)
             return True
         except ValueError:
             return False
+        
     def set_allergen(self, allergen):
         self.allergens.append(allergen)
-    def set_recipe(self, Recipe):
-        self.recipes =Recipe
+        
+    def set_recipe(self, recipe):
+        self.recipe = recipe
     
     def get_name(self):
         return self.name
+    
     def get_density(self):
         return self.density
-    def get_recipes(self):
-        return self.recipes
+    
+    def get_recipe(self):
+        return self.recipe
+        
+    def get_recipe_object(self, recipes_list):
+        for i in recipes_list:
+            if self.recipe == i.get_name():
+                self.recipe_object = Recipe()
+                self.recipe_object = i
+                return self.recipe_object
+                
+    
+    
     def get_allergens(self):
         return self.allergens
     
@@ -74,7 +89,7 @@ class Ingredient_container:
     def set_unit(self, unit):
         #Asettaa yksikon
         self.unit = unit
-        
+
         
     def get_ingredients(self):
         return self.ingredient

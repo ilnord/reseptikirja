@@ -48,8 +48,6 @@ class Find_recipes:
      
     def check_ingredient_amount(self, recipe_ingredient, storage_ingredient):
         #Tarkistaa kunkin reseptin vaatiman raaka-aineen kohdalla, onko sita varastossa tarpeeksi
-        print (recipe_ingredient)
-        print (storage_ingredient)
         if recipe_ingredient.get_unit() == storage_ingredient.get_unit():
             if recipe_ingredient.get_amount() < storage_ingredient.get_amount():
                 return True
@@ -57,15 +55,15 @@ class Find_recipes:
                 return False
         else:
             wanted_unit = recipe_ingredient.get_unit()
-            print(wanted_unit)
+            #print(wanted_unit)
             received_unit = storage_ingredient.get_unit()
-            print(received_unit)
+            #print(received_unit)
             density = recipe_ingredient.get_ingredients().get_density()
-            print(density)
+            #print(density)
             received_amount = storage_ingredient.get_amount()
-            print(received_amount)
+            #print(received_amount)
             self.storage_ingredient_transferred_amount = self.Unit_transfer.unit_transfer(received_unit, wanted_unit, received_amount, density)
-            print(self.storage_ingredient_transferred_amount)
+            #print(self.storage_ingredient_transferred_amount)
             if recipe_ingredient.get_amount() < self.storage_ingredient_transferred_amount:
                 return True
             else:
@@ -76,18 +74,25 @@ class Find_recipes:
         #Tarkistaa, kuinka monta raaka-ainetta tarvittavista on saatavilla.
         #Kayttaa apunaan metodia check_ingredients_amount, joka tarkistaa kunkin raaka-aineen maaran riittavyyden
         ingredients_found = 0
+        
         for recipe_ingredient in recipe.get_ingredients():
             for storage_ingredient in self.storage_list:
-                print(recipe_ingredient.get_ingredients().get_name())
-                print(storage_ingredient.get_ingredients().get_name())
+                #print(recipe_ingredient.get_ingredients().get_name())
+                #print(storage_ingredient.get_ingredients().get_name())
                 if recipe_ingredient.get_ingredients().get_name() == storage_ingredient.get_ingredients().get_name():
                     print("loyty match")
                     if self.check_ingredient_amount(recipe_ingredient, storage_ingredient):
                         ingredients_found += 1
-                    #elif recipe_ingredient.get_recipes() != None:
-                        #if self.check_for_ingredients(recipe_ingredient.get_recipes()) \
-                        #== len(recipe_ingredient.get_recipes().get_ingredients()):
-                        #   ingredients_found += 1
+                    elif recipe_ingredient.get_ingredients().get_recipe() != None:
+                        recipe_object = recipe_ingredient.get_ingredients().get_recipe_object(self.recipes_list)
+                        print(recipe_object)
+                        print("tarvittavat osumat =", len(recipe_object.get_ingredients()))
+                        print(recipe_object.get_ingredients()[0].get_ingredients().get_name())
+                        print(recipe_object.get_ingredients()[1].get_ingredients().get_name())
+                        if self.check_for_ingredients(recipe_object) == len(recipe.get_ingredients()):
+                            print("ASDASDASDASDASDASDASD")
+                            ingredients_found += 1
+                    break
         return ingredients_found
                     
     def find_all_recipes(self):
