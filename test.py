@@ -4,6 +4,7 @@ Created on 23.4.2016
 @author: Ilkka
 '''
 # -*- coding: utf-8 -*-
+
 G = 0
 KG = 1
 TSP = 2
@@ -108,7 +109,7 @@ class Test(unittest.TestCase):
         f = open('Ingredientlist_test.txt', 'r')
         ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
         f.close()
-        self.assertEqual(1, successfull_reads,"Onnistuneiden lukujen maara ei tasmaa")
+        self.assertEqual(2, successfull_reads,"Onnistuneiden lukujen maara ei tasmaa")
         self.assertEqual(1, failed_reads, "Epaonnistuneiden lukujen maara ei tasmaa")
         self.assertEqual(successfull_reads, len(ingredients_list), "Listan pituus ei vastaa onnistuneita lukuja")
         if len(ingredients_list) > 0:
@@ -155,8 +156,35 @@ class Test(unittest.TestCase):
             self.assertIs(ingredient1, recipe.get_ingredients()[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua oliota")
             self.assertIs(ingredient2, recipe.get_ingredients()[1].get_ingredients(), "Toinen raaka-aine ei vastaa haluttua oliota")
     
+    
+    def test_read_recipes_from_actual_file(self):
+        f1 = open('Ingredientlist_test.txt', 'r')
+        ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
+        f1.close()
+        
+        self.assertEqual(2, successfull_reads_i, "Onnistuneiden lukujen maara ei tasmaa")
+        self.assertEqual(1, failed_reads_i, "Epaonnistuneiden lukujen maara ei tasmaa")
+        
+        f2 = open('Recipelist_test.txt', 'r')
+        recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
+        f2.close()
+        
+        self.assertEqual(1, successfull_reads, "Onnistuneiden lukujen maara ei tasmaa")
+        self.assertEqual(0, failed_reads, "Epaonnistuneiden lukujen maara ei tasmaa")
+        self.assertEqual(successfull_reads, len(recipes_list), "Listan pituus ei vastaa onnistuneita lukuja")
+        
+        ingredient1 = ingredients_list[0]
+        ingredient2 = ingredients_list[1]
+
+        if len(recipes_list) > 0:
+            recipe = recipes_list[0]
+            self.assertEqual("Kalakakku", recipe.get_name(), "Reseptin nimi ei tasmaa")
+            self.assertEqual(["paista kala", "tee kakku"], recipe.get_instructions(), "Ohjeet eivat tasmaa")
+            self.assertIs(ingredient1, recipe.get_ingredients()[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua oliota")
+            self.assertIs(ingredient2, recipe.get_ingredients()[1].get_ingredients(), "Toinen raaka-aine ei vastaa haluttua oliota")
+        
     def test_read_storage_from_file(self):
-         
+        
         self.input_file = StringIO()
         self.input_file.write('STORAGELIST\n')
         self.input_file.write('riisi;10;kg\n')
@@ -188,6 +216,7 @@ class Test(unittest.TestCase):
             
             
     def test_read_storage_from_actual_file(self):
+        
         ingredient1 = Ingredient()
         ingredient1.set_name("riisi")
         ingredient1.set_density(0.5)
@@ -213,8 +242,9 @@ class Test(unittest.TestCase):
 
     def test_check_for_ingredients(self):
         
+        print("asdasdasdasdasdasdasd")
         self.Find_recipes = Find_recipes()
-        
+        '''
         ingredient1 = Ingredient()
         ingredient1.set_name("riisi")
         ingredient1.set_density(0.5)
@@ -223,12 +253,16 @@ class Test(unittest.TestCase):
         ingredient2.set_name("vesi")
         ingredient2.set_density(1)
         
-        f = open('Ingredientlist_test.txt', 'r')
+        f = open('Ingredientlist.txt', 'r')
         ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
         f.close()
         
         ingredient_container = Ingredient_container()
         ingredient_container2 = Ingredient_container()
+        ingredient_container.set_amount(500)
+        ingredient_container.set_unit(G)
+        ingredient_container2.set_amount(1)
+        ingredient_container2.set_unit(L)
         ingredient_container.set_ingredient(ingredient1.get_name(), ingredients_list)
         ingredient_container2.set_ingredient(ingredient2.get_name(), ingredients_list)
         
@@ -236,11 +270,22 @@ class Test(unittest.TestCase):
         recipe1 = Recipe()
         recipe1.set_name("Paistettu riisi")
         recipe1.set_outcome_amount(5)
-        recipe1.set_outcome_unit("dl")
+        recipe1.set_outcome_unit(DL)
         recipe1.set_instructions("keita riisi")
         recipe1.set_instructions("paista riisi")
         recipe1.add_ingredients(ingredient_container)
-
+        recipe1.add_ingredients(ingredient_container2)
+        '''
         
-        ingredients_found = self.Find_recipes.check_for_ingredients(recipe1)
-        self.assertEqual(1, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")
+        f1 = open('Ingredientlist.txt', 'r')
+        ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
+        f1.close()
+        
+        f2 = open('Recipelist.txt', 'r')
+        recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
+        f2.close()
+        
+        recipe = recipes_list[0]
+        
+        ingredients_found = self.Find_recipes.check_for_ingredients(recipe)
+        self.assertEqual(2, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")

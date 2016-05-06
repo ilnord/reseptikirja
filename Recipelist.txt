@@ -1,0 +1,8 @@
+RECIPELIST
+#Recipe
+Name            : Paistettu riisi
+  Outcome            : 4: portion
+Instructions     : Keita riisi
+Instructions     : Paista riisi
+     Ingredient     : riisi : 500 : g
+ Ingredient     : vesi : 1 : l

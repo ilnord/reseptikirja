@@ -1,0 +1,4 @@
+STORAGELIST
+riisi;10;kg
+mehu;1;dl
+vesi;10;l

@@ -64,6 +64,7 @@ class Ingredient_container:
         return False
 
     def set_amount(self,amount):
+        #Asettaa maaran
         try:
             self.amount = int(amount)
             return True
@@ -71,6 +72,7 @@ class Ingredient_container:
             return False
     
     def set_unit(self, unit):
+        #Asettaa yksikon
         self.unit = unit
         
         

@@ -27,7 +27,45 @@ class Unit_transfer:
     def __init__(self):
         self.transferred_amount = None
         
+    def unit_string_to_variable(self, unit):
+        if unit.upper() == "G":
+            unit = G
+            return unit
+        elif unit.upper() == "KG":
+            unit = KG
+            return unit
+        elif unit.upper() == "TSP":
+            unit = TSP
+            return unit
+        elif unit.upper() == "TBLSP":
+            unit = TBLSP
+            return unit
+        elif unit.upper() == "CL":
+            unit = CL
+            return unit
+        elif unit.upper() == "DL":
+            unit = DL
+            return unit
+        elif unit.upper() == "L":
+            unit = L
+            return unit
+        elif unit.upper() == "PIECE":
+            unit = PIECE
+            return unit
+        elif unit.upper() == "PORTION":
+            unit = PORTION
+            return unit
+        else:
+            print("stringin muuntaminen ei onnistunut")
+            return False
+        
+        
+        
     def unit_transfer(self, received_unit, wanted_unit, received_amount, density):
+        if received_unit not in mass_units and received_unit not in volume_units:
+            received_unit = self.unit_string_to_variable(received_unit)
+        if wanted_unit not in mass_units and wanted_unit not in volume_units:
+            wanted_unit = self.unit_string_to_variable(wanted_unit)
         if received_unit in mass_units and wanted_unit in mass_units:
             self.transferred_amount = self.mass_to_mass(received_unit, wanted_unit, received_amount, density)
         elif received_unit in volume_units and wanted_unit in volume_units:

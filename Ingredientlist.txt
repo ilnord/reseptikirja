@@ -1,0 +1,25 @@
+INGREDIENTLIST
+#Ingredient
+  Name             : Kala
+ Density            : 3
+ Recipe     : 
+ Allergen     : Kala
+ Allergen     : Ruodot
+        
+
+#Ingredient
+Name		:riisi
+Density		:0.5
+Recipe		:paistettu riisi
+Allergen	:tarkkelys
+
+#Ingredient
+Name		:vesi
+Density		:1
+Recipe		:paistettu riisi
+
+#Ingredient
+Name		:mehu
+Density		:1.2
+Recipe		:mehukeitto
+Allergen	:mansikka

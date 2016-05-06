@@ -3,6 +3,16 @@ Created on 20.4.2016
 
 @author: Ilkka
 '''
+G = 0
+KG = 1
+TSP = 2
+TBLSP = 3
+CL = 4
+DL = 5
+L = 6
+PIECE = 7
+PORTION = 8
+
 # -*- coding: utf-8 -*-
 class Recipe:
     
