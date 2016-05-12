@@ -298,9 +298,19 @@ class Test(unittest.TestCase):
     def test_find_must_include(self):
         self.Find_recipes = Find_recipes()
         
-        mandatory_ingredients = ["mansikka", "mehu"]
+        mandatory_ingredients = ["mehu", "mansikka"]
         makeable_recipes = self.Find_recipes.find_must_include(mandatory_ingredients)
+        print(mandatory_ingredients)
+        for recipe in makeable_recipes:
+            print(recipe.get_name())
         self.assertEqual(1, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aineet mehu ja mansikka ovat pakolliset")
+        
+        mandatory_ingredients2 = ["riisi", "kala"]
+        makeable_recipes = self.Find_recipes.find_must_include(mandatory_ingredients2)
+        print(mandatory_ingredients2)
+        for recipe in makeable_recipes:
+            print(recipe.get_name())
+        self.assertEqual(1, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aine riisi on pakollinen")
         
     def test_find_no_allergens(self):
         self.Find_recipes = Find_recipes()

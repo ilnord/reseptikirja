@@ -104,6 +104,7 @@ class Find_recipes:
                     
     def find_all_recipes(self):
         #Etsii kaikki reseptit, jotka on valmistettavissa varastosta loytyvista raaka-aineista
+        self.makeable_recipes = []
         for recipe in self.recipes_list:
             if len(recipe.get_ingredients()) == self.check_for_ingredients(recipe)[0]:
                 self.makeable_recipes.append(recipe)
@@ -112,6 +113,7 @@ class Find_recipes:
         
     def find_missing_n_ingredients(self, n):
         #etsii reseptit, joiden valmistamiseksi puuttuu korkeintaa n raaka-ainetta
+        self.makeable_recipes = []
         for recipe in self.recipes_list:
             if len(recipe.get_ingredients())-n <= self.check_for_ingredients(recipe)[0]:
                 self.makeable_recipes.append(recipe)
@@ -119,6 +121,7 @@ class Find_recipes:
     
     
     def find_must_not_include(self, ingredients):
+        self.makeable_recipes = []
         #etsii reseptit, jotka eivat saa sisaltaa tiettya raaka-ainetta
         for recipe in self.recipes_list:
             recipe_allowed = True
@@ -141,18 +144,23 @@ class Find_recipes:
     
     def find_must_include(self, ingredients):
         #etsii reseptit, joiden halutaan sisaltavan tiettya raaka-ainetta
+        self.makeable_recipes = []
         for recipe in self.recipes_list:
             recipe_allowed = False
+            recipe_hitcount = 0
             for recipe_ingredient in recipe.get_ingredients():
                 for ingredient in ingredients:
                     #print(ingredient)
                     #print(recipe_ingredient.get_ingredients().get_name())
                     #print(len(recipe.get_ingredients()))
                     if recipe_ingredient.get_ingredients().get_name() == ingredient:
-                        recipe_allowed = True
+                        recipe_hitcount += 1
+                        if recipe_hitcount == len(ingredients):
+                            recipe_allowed = True
                         break
             if recipe_allowed == True:
                 self.makeable_recipes.append(recipe)
+                recipe_hitcount = 0
         return self.makeable_recipes
     '''  
     def find_no_allergens(self, allergens):
