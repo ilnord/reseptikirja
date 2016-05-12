@@ -50,7 +50,7 @@ class Recipe:
         #Palauttaa reseptin ohjeet
         return self.instructions
     def get_ingredients(self):
-        #Palauttaa reseptin vaatimat raaka-aineet
+        #Palauttaa reseptin vaatimat raaka-aineet ingredients container muodossa
         return self.ingredients
     def get_outcome_unit(self):
         #Kertoo, missa yksikossa valmista ruokaa mitataan

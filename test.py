@@ -4,6 +4,7 @@ Created on 23.4.2016
 @author: Ilkka
 '''
 # -*- coding: utf-8 -*-
+from pip.utils.outdated import SELFCHECK_DATE_FMT
 
 G = 0
 KG = 1
@@ -34,6 +35,15 @@ class Test(unittest.TestCase):
         #IO setUp
         self.IO = IO()
         self.Unit_transfer = Unit_transfer()
+        f_storage = open('Storage.txt', 'r')
+        f_recipe = open('Recipelist.txt', 'r')
+        f_ingredients = open('Ingredientlist.txt', 'r')
+        self.ingredients_list, succesfull_reads, failed_reads = self.IO.read_ingredients_from_file(f_ingredients)
+        self.storage_list, succesfull_reads, failed_reads = self.IO.read_storage_from_file(f_storage, self.ingredients_list)
+        self.recipes_list, succesfull_reads, failed_reads = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)
+        f_storage.close()
+        f_recipe.close()
+        f_ingredients.close()
         
     def test_transfer_mass_to_mass(self):
         unit = KG 
@@ -225,7 +235,11 @@ class Test(unittest.TestCase):
         ingredient2.set_name("mehu")
         ingredient2.set_density(1)
         
-        ingredients_list = [ingredient1,ingredient2]
+        ingredient3 = Ingredient()
+        ingredient3.set_name("peruna")
+        ingredient3.set_density(1)
+        
+        ingredients_list = [ingredient1,ingredient2, ingredient3]
         
         f = open('Storage_test.txt', 'r')
         storage_list, successfull_reads, failed_reads = self.IO.read_storage_from_file(f, ingredients_list)
@@ -239,68 +253,58 @@ class Test(unittest.TestCase):
             self.assertIs(ingredient1, storage_list[0].get_ingredients(), "Ensimmainen raaka-aine ei tasmaa haluttua olioita")
             self.assertIs(ingredient2, storage_list[1].get_ingredients(), "Toinen raaka-aine ei tasmaa haluttua oliota")
 ###################################################################################################################
-
+    
     def test_check_for_ingredients_all_ingredients_available(self):
         
         self.Find_recipes = Find_recipes()
-        '''
-        ingredient1 = Ingredient()
-        ingredient1.set_name("riisi")
-        ingredient1.set_density(0.5)
         
-        ingredient2 = Ingredient()
-        ingredient2.set_name("vesi")
-        ingredient2.set_density(1)
+        recipe = self.recipes_list[0]
         
-        f = open('Ingredientlist.txt', 'r')
-        ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
-        f.close()
-        
-        ingredient_container = Ingredient_container()
-        ingredient_container2 = Ingredient_container()
-        ingredient_container.set_amount(500)
-        ingredient_container.set_unit(G)
-        ingredient_container2.set_amount(1)
-        ingredient_container2.set_unit(L)
-        ingredient_container.set_ingredient(ingredient1.get_name(), ingredients_list)
-        ingredient_container2.set_ingredient(ingredient2.get_name(), ingredients_list)
-        
-
-        recipe1 = Recipe()
-        recipe1.set_name("Paistettu riisi")
-        recipe1.set_outcome_amount(5)
-        recipe1.set_outcome_unit(DL)
-        recipe1.set_instructions("keita riisi")
-        recipe1.set_instructions("paista riisi")
-        recipe1.add_ingredients(ingredient_container)
-        recipe1.add_ingredients(ingredient_container2)
-        '''
-        
-        f1 = open('Ingredientlist.txt', 'r')
-        ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
-        f1.close()
-        
-        f2 = open('Recipelist.txt', 'r')
-        recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
-        f2.close()
-        
-        recipe = recipes_list[0]
-        
-        ingredients_found = self.Find_recipes.check_for_ingredients(recipe)
+        ingredients_found, loop_count = self.Find_recipes.check_for_ingredients(recipe)
         self.assertEqual(2, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")
-        
+        self.assertEqual(0, loop_count, "Raaka-aineiden, joita yritettiin valmistaa varastosta, maara ei tasmaa")
+    
+             
     def test_check_for_ingredients_more_ingredients_made_from_storage(self):
         self.Find_recipes = Find_recipes()
-        
-        f1 = open('Ingredientlist.txt', 'r')
-        ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
-        f1.close()
-        
-        f2 = open('Recipelist.txt', 'r')
-        recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
-        f2.close()
-        
-        recipe = recipes_list[2]
-        print(recipe.get_name())
-        ingredients_found = self.Find_recipes.check_for_ingredients(recipe)
+        recipe = self.recipes_list[2]
+        ingredients_found, loop_count = self.Find_recipes.check_for_ingredients(recipe)
         self.assertEqual(2, ingredients_found,"Loytyneiden raaka-aineiden maara ei tasmaa")
+        self.assertEqual(1, loop_count, "Raaka-aineiden, joita yritettiin valmistaa varastosta, maara ei tasmaa")
+       
+    
+    def test_find_all_recipes(self):
+        self.Find_recipes = Find_recipes()
+        
+        makeable_recipes = self.Find_recipes.find_all_recipes()
+        self.assertEqual(3, len(makeable_recipes), "Valmistettavissa olevien rseptien maara ei tasmaa")
+        
+        self.assertEqual(makeable_recipes[0].get_name(), self.recipes_list[0].get_name(), "Reseptin nimi ei tasmaa")
+             
+    def test_find_missing_n_ingredients(self):
+        self.Find_recipes = Find_recipes()
+        
+        missing_ingredients = 1
+        makeable_recipes = self.Find_recipes.find_missing_n_ingredients(missing_ingredients)
+        self.assertEqual(4, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun yksi puuttuva raaka-aine sallitaan" )
+        
+    def test_find_must_not_include(self):
+        self.Find_recipes = Find_recipes()
+        
+        forbidden_ingredients = ["riisi", "kala"]
+        makeable_recipes = self.Find_recipes.find_must_not_include(forbidden_ingredients)
+        self.assertEqual(2, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aineet riisi ja kala on kielletty")
+        
+    def test_find_must_include(self):
+        self.Find_recipes = Find_recipes()
+        
+        mandatory_ingredients = ["mansikka", "mehu"]
+        makeable_recipes = self.Find_recipes.find_must_include(mandatory_ingredients)
+        self.assertEqual(1, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aineet mehu ja mansikka ovat pakolliset")
+        
+    def test_find_no_allergens(self):
+        self.Find_recipes = Find_recipes()
+        
+        allergens = ["tarkkelys"]
+        makeable_recipes = self.Find_recipes.find_no_allergens(allergens)
+        self.assertEqual(2, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun allergeeni tarkkelys on kielletty")

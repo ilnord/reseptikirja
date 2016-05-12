@@ -8,6 +8,7 @@ from recipe import Recipe
 from IO import IO         
 from ingredient import Ingredient
 from unit_transfer import Unit_transfer
+from numpy.core.numeric import False_
 
 G = 0
 KG = 1
@@ -22,7 +23,6 @@ PORTION = 8
 
 class Find_recipes:
     '''
-    Eli etsi_ruoka
     Maaritellaan tarkemmin sita, mita lahdetaan hakemaan:
     maaritellaan milla ehdoilla ohjelman kehittama lista halutaan muodostaa.
     '''
@@ -70,47 +70,114 @@ class Find_recipes:
                 return False
         
         
-    def check_for_ingredients(self, recipe):
-        #Tarkistaa, kuinka monta raaka-ainetta tarvittavista on saatavilla.
-        #Kayttaa apunaan metodia check_ingredients_amount, joka tarkistaa kunkin raaka-aineen maaran riittavyyden
+    def check_for_ingredients(self, recipe, loop_counter = 0):
+        '''
+        Tarkistaa, kuinka monta raaka-ainetta tarvittavista on saatavilla.
+        Kayttaa apunaan metodia check_ingredients_amount, joka tarkistaa kunkin raaka-aineen maaran riittavyyden
+        Huomioitavaa, etta funktio palauttaa kaksi arvoa; Loydetyt raaka-aineet ja loop-counterin, jota tarvitaan rekursion laskemisee.
+        Nainollen funktioita kutsuttaessa pitaa poimia vain toinen sen palauttamista arvoista, tyyliin:
+        ingredients_found = check_for_ingredients(recipe)[0]
+        Loop counter kertoo siis, kuinka montaa raaka-ainetta on pyrytty valmistamaan varastosta, ei kuinka monta saatiin valmistettua
+        '''
         ingredients_found = 0
-        
         for recipe_ingredient in recipe.get_ingredients():
             for storage_ingredient in self.storage_list:
-                #print(recipe_ingredient.get_ingredients().get_name())
-                #print(storage_ingredient.get_ingredients().get_name())
                 if recipe_ingredient.get_ingredients().get_name() == storage_ingredient.get_ingredients().get_name():
-                    print("loyty match")
+                    #print(recipe_ingredient.get_ingredients().get_name())
+                    #print(storage_ingredient.get_ingredients().get_name())
+                    #print("loyty match")
                     if self.check_ingredient_amount(recipe_ingredient, storage_ingredient):
                         ingredients_found += 1
                     elif recipe_ingredient.get_ingredients().get_recipe() != None:
+                        #print("raaka-ainetta ei tarpeeksi, valmistetaan lisaa varastosta")
                         recipe_object = recipe_ingredient.get_ingredients().get_recipe_object(self.recipes_list)
-                        print(recipe_object)
-                        print("tarvittavat osumat =", len(recipe_object.get_ingredients()))
-                        print(recipe_object.get_ingredients()[0].get_ingredients().get_name())
-                        print(recipe_object.get_ingredients()[1].get_ingredients().get_name())
-                        if self.check_for_ingredients(recipe_object) == len(recipe.get_ingredients()):
-                            print("ASDASDASDASDASDASDASD")
-                            ingredients_found += 1
+                        #print(recipe_object.get_name())
+                        #print("tarvittavat osumat =", len(recipe_object.get_ingredients()))
+                        #print(recipe_object.get_ingredients()[0].get_ingredients().get_name())
+                        #print(recipe_object.get_ingredients()[1].get_ingredients().get_name())
+                        ingredients_found_temp, loop_counter = self.check_for_ingredients(recipe_object, (loop_counter + 1))
+                        if ingredients_found_temp == len(recipe.get_ingredients()) and loop_counter < 2:
+                            #print("ASDASDASDASDASDASDASD", loop_counter)
+                            ingredients_found += (1 + loop_counter) 
                     break
-        return ingredients_found
+        return ingredients_found, loop_counter
                     
     def find_all_recipes(self):
         #Etsii kaikki reseptit, jotka on valmistettavissa varastosta loytyvista raaka-aineista
         for recipe in self.recipes_list:
-            if len(recipe.get_ingredients()) == self.check_for_ingredients(recipe):
+            if len(recipe.get_ingredients()) == self.check_for_ingredients(recipe)[0]:
                 self.makeable_recipes.append(recipe)
         return self.makeable_recipes
      
         
-    def missing_n_ingredients(self):
+    def find_missing_n_ingredients(self, n):
         #etsii reseptit, joiden valmistamiseksi puuttuu korkeintaa n raaka-ainetta
-        pass
-        
-    def must_not_include(self):
-        #etsii reseptit, jotka eivat saa sisaltaa tiettya raaka-ainetta
-        pass
+        for recipe in self.recipes_list:
+            if len(recipe.get_ingredients())-n <= self.check_for_ingredients(recipe)[0]:
+                self.makeable_recipes.append(recipe)
+        return self.makeable_recipes
     
-    def must_include(self):
+    
+    def find_must_not_include(self, ingredients):
+        #etsii reseptit, jotka eivat saa sisaltaa tiettya raaka-ainetta
+        for recipe in self.recipes_list:
+            recipe_allowed = True
+            for recipe_ingredient in recipe.get_ingredients():
+                for ingredient in ingredients:
+                    #print(ingredient)
+                    #print(recipe_ingredient.get_ingredients().get_name())
+                    #print(len(recipe.get_ingredients()))
+                    if recipe_ingredient.get_ingredients().get_name() == ingredient:
+                        recipe_allowed = False
+                        break
+                        #if allowed_ingredient == len(recipe.get_ingredients()):
+                        #    self.makeable_recipes.append(recipe)
+            if recipe_allowed == True:
+                    self.makeable_recipes.append(recipe)
+        #for recipes in self.makeable_recipes:
+            #for recipes_ingredient in recipes.get_ingredients():
+                #print(recipes_ingredient.get_ingredients().get_name())
+        return self.makeable_recipes        
+    
+    def find_must_include(self, ingredients):
         #etsii reseptit, joiden halutaan sisaltavan tiettya raaka-ainetta
-        pass
+        for recipe in self.recipes_list:
+            recipe_allowed = False
+            for recipe_ingredient in recipe.get_ingredients():
+                for ingredient in ingredients:
+                    #print(ingredient)
+                    #print(recipe_ingredient.get_ingredients().get_name())
+                    #print(len(recipe.get_ingredients()))
+                    if recipe_ingredient.get_ingredients().get_name() == ingredient:
+                        recipe_allowed = True
+                        break
+            if recipe_allowed == True:
+                self.makeable_recipes.append(recipe)
+        return self.makeable_recipes
+    '''  
+    def find_no_allergens(self, allergens):
+        for recipe in self.recipes_list:
+            recipe_allowed = True
+            for recipe_ingredient in recipe.get_ingredients():
+                for allergen in allergens:
+                    print(recipe_ingredient.get_ingredients().get_allergens())
+                    if recipe_ingredient.get_ingredients().get_allergens() == allergen:
+                        recipe_allowed =  False
+                        break
+            if recipe_allowed == True:
+                self.makeable_recipes.append(recipe)
+        return self.makeable_recipes
+    '''
+    
+    def find_no_allergens(self, allergens):
+        for recipe in self.recipes_list:
+            recipe_allowed = True
+            for recipe_ingredient in recipe.get_ingredients():
+                for allergen_recipe in recipe_ingredient.get_ingredients().get_allergens():
+                    for allergen_forbidden in allergens:
+                        if allergen_recipe == allergen_forbidden:
+                            recipe_allowed =  False
+                            break
+            if recipe_allowed == True:
+                self.makeable_recipes.append(recipe)
+        return self.makeable_recipes

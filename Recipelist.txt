@@ -20,3 +20,16 @@ Outcome		:1	:l
 Instructions	:Sekoita mehu ja marjat
 Ingredient	:mehu 		:5	:dl
 Ingredient	:mansikka	:300	:g
+
+#Recipe
+Name		:kalaa ja paistettua riisia
+Outcome		:4	:portion
+Instrucions	:keita riisi
+Instructions	:paista riisi
+Instructions	:paista kala
+Instructions	:sekoita
+Ingredient	:riisi	:500	:g
+Ingredient	:vesi	:1	:l
+Ingredient	:kala	:500	:g
+
+

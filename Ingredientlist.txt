@@ -1,10 +1,10 @@
 INGREDIENTLIST
 #Ingredient
-  Name             : Kala
+ Name             : kala
  Density            : 3
  Recipe     : 
- Allergen     : Kala
- Allergen     : Ruodot
+ Allergen     : kala
+ Allergen     : ruodot
         
 
 #Ingredient
