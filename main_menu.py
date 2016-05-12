@@ -12,12 +12,13 @@ class Main(object):
     
     def __init__(self):
         #Luodaan menut ja submenut
-        self.main_menu_options = ["1. Hae resepteja", "2. Tarkastele tunnettuja resepeja", "3. Tarkastele tunnettua varastoa", \
-                                  "4. Tulosta kaikki tunnetut raaka-aineet", "0. Sulje ohjelma"]
+        self.main_menu_options = ["1. Hae resepteja", "2. Tarkastele tunnettuja resepeja", "3. Tarkastele tunnettuja raaka-aineita", \
+                                  "4. Tarkastele tamanhetkista varastoa", "0. Sulje ohjelma"]
         self.search_menu_options = ["1. Etsi kaikki reseptit, jotka valmistettavissa varastossa olevista raaka-aineista", "2. Etsi kaikki reseptit, jotka sisaltavat tiettyja raaka-aineita", \
-                                    "3. Etsi reseptit, jotka eivat sisalla tiettyja aineita", "4. Reseptit, joihin varastotarvikkeet riittävät", "5. Reseptit, joista puuttuu N-määrä raaka-aineita varastosta", "6. Reseptit, joista löytyy N-määrä raaka-aineita varastosta", "0. Takaisin"]
+                                    "3. Etsi reseptit, jotka eivat sisalla tiettyja aineita", "4. Etsi reseptit, jotka eivat sisalla tiettya allergeenia",\
+                                     "5. Etsi reseptit, joista puuttuu N-määrä raaka-aineita varastosta", "0. Takaisin"]
         self.inventory_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa varasto", "0. Takaisin"]
-        self.recipes_menu_options = ["1. Etsi tietty resepti ja tulosta sen tiedot", "2. Listaa kaikki reseptit", "0. Takaisin"]
+        self.recipes_menu_options = ["1. Etsi tietty resepti ja tulosta sen tiedot", "2. Listaa kaikki reseptit ja niiden tiedot", "0. Takaisin"]
         self.ingredients_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa raaka-aineet", "0. Takaisin"]
         
         self.Ingredient = Ingredient()
@@ -87,7 +88,7 @@ class Main(object):
             if user_input == 1:
                 self.makeable_recipes = self.Find_recipes.find_all_recipes()
                 for recipe in self.makeable_recipes:
-                    print (recipe.get_name())
+                    self.print_recipes(recipe)
                 self.makeable_recipes = []
                 
             elif user_input == 2:
@@ -98,7 +99,7 @@ class Main(object):
                 if not self.makeable_recipes:
                     print("Valituilla raaka-aineilla ei loytynyt yhtakaan reseptia")
                 for recipe in self.makeable_recipes:
-                    print (recipe.get_name())
+                    self.print_recipes(recipe)
                 self.makeable_recipes = []
                 
             elif user_input == 3:
@@ -109,7 +110,7 @@ class Main(object):
                 if not self.makeable_recipes:
                     print("Valituilla raaka-aineilla ei loytynyt yhtakaan reseptia")
                 for recipe in self.makeable_recipes:
-                    print (recipe.get_name())
+                    self.print_recipes(recipe)
                 self.makeable_recipes = []
                 
             elif user_input == 4:
@@ -121,7 +122,16 @@ class Main(object):
             elif user_input == 0:
                 return 0
             
-    #def print_recipes(self, recipes):
+    def print_recipes(self, recipe):
+        print(recipe.get_name().upper())
+        print("Reseptin raaka-aineet:")
+        for ingredient in recipe.get_ingredients():
+            print(ingredient.get_ingredients().get_name(), ingredient.get_amount(), ingredient.get_unit())
+        print("Reseptin ohjeet:" )
+        for instruction in recipe.get_instructions():
+            print(instruction)
+        print("Valmista tuotetta syntyy ", recipe.get_outcome_amount(), recipe.get_outcome_unit())
+        print("\n")
         
     def recipes_menu(self):
         user_input = self.run_menu(self.recipes_menu_options)
@@ -131,21 +141,19 @@ class Main(object):
             wanted_recipe = self.format_input(input_temp)
             for recipe in self.recipes_list:
                 if recipe.get_name() == wanted_recipe:
-                    found_recipe = recipe
-                    print(found_recipe.get_name())
-                    print("Reseptin raaka-aineet:")
-                    for ingredient in found_recipe.get_ingredients():
-                        print(ingredient.get_ingredients().get_name(), ingredient.get_amount(), ingredient.get_unit())
-                    print("Reseptin ohjeet:" )
-                    for instruction in found_recipe.get_instructions():
-                        print(instruction)
-                    print("Valmista tuotetta syntyy ", found_recipe.get_outcome_amount(), found_recipe.get_outcome_unit())
-                    break
+                    self.print_recipes(recipe)
+                    exit
+            print("Haluttua reseptia ei loytynyt")
+                
             
         elif user_input == 2:
-            print("Listataan reseptit")
+            for recipe in self.recipes_list:
+                self.print_recipes(recipe)
+                
         elif user_input == 0:
-            return 0            
+            return 0
+        
+                 
     def inventory_menu(self):
         user_input = self.run_menu(self.inventory_menu_options)
         if user_input == 1:

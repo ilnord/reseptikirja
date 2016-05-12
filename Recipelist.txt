@@ -1,6 +1,6 @@
 RECIPELIST
 #Recipe
-Name            : Paistettu riisi
+Name            : paistettu riisi
   Outcome            : 4: portion
 Instructions     : Keita riisi
 Instructions     : Paista riisi
