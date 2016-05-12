@@ -4,6 +4,9 @@ Created on 19.4.2016
 '''
 # -*- coding: utf-8 -*-
 from find_recipes import Find_recipes
+from recipe import Recipe
+from ingredient import Ingredient, Ingredient_container
+from IO import IO
 
 class Main(object):
     
@@ -16,9 +19,22 @@ class Main(object):
         self.inventory_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa varasto", "0. Takaisin"]
         self.recipes_menu_options = ["1. Etsi tietty resepti ja tulosta sen tiedot", "2. Listaa kaikki reseptit", "0. Takaisin"]
         self.ingredients_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa raaka-aineet", "0. Takaisin"]
+        
+        self.Ingredient = Ingredient()
         self.Find_recipes = Find_recipes()
+        self.Recipes = Recipe()
+        self.IO = IO()
         self.test_mode = False
         self.makeable_recipes = []
+        f_storage = open('Storage.txt', 'r')
+        f_recipe = open('Recipelist.txt', 'r')
+        f_ingredients = open('Ingredientlist.txt', 'r')
+        self.ingredients_list, succesfull_reads, failed_reads = self.IO.read_ingredients_from_file(f_ingredients)
+        self.storage_list, succesfull_reads, failed_reads = self.IO.read_storage_from_file(f_storage, self.ingredients_list)
+        self.recipes_list, succesfull_reads, failed_reads = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)
+        f_storage.close()
+        f_recipe.close()
+        f_ingredients.close()
         
     def run_menu(self, menu_options):
         
@@ -46,6 +62,9 @@ class Main(object):
         input_list = input_temp.split(",")
         input_list = [i.strip(' ').lower() for i in input_list]
         return input_list
+    def format_input(self, input_temp):
+        formatted_input = input_temp.strip().lower()
+        return formatted_input
     
     
     def main_menu(self):
@@ -54,9 +73,9 @@ class Main(object):
             if user_input == 1:
                 self.search_menu()
             elif user_input == 2:
-                self.inventory_menu()
-            elif user_input == 3:
                 self.recipes_menu()
+            elif user_input == 3:
+                self.inventory_menu()()
             elif user_input == 4:
                 self.ingredients_menu()
             elif user_input == 0:
@@ -102,13 +121,26 @@ class Main(object):
             elif user_input == 0:
                 return 0
             
-
+    #def print_recipes(self, recipes):
+        
     def recipes_menu(self):
         user_input = self.run_menu(self.recipes_menu_options)
         if user_input == 1:
             input_temp = self.ask_for_input_string\
                 ("Minka reseptin tiedot haluat nakyviin?")
-            wanted_recipe = self.input_text_to_list(input_temp)
+            wanted_recipe = self.format_input(input_temp)
+            for recipe in self.recipes_list:
+                if recipe.get_name() == wanted_recipe:
+                    found_recipe = recipe
+                    print(found_recipe.get_name())
+                    print("Reseptin raaka-aineet:")
+                    for ingredient in found_recipe.get_ingredients():
+                        print(ingredient.get_ingredients().get_name(), ingredient.get_amount(), ingredient.get_unit())
+                    print("Reseptin ohjeet:" )
+                    for instruction in found_recipe.get_instructions():
+                        print(instruction)
+                    print("Valmista tuotetta syntyy ", found_recipe.get_outcome_amount(), found_recipe.get_outcome_unit())
+                    break
             
         elif user_input == 2:
             print("Listataan reseptit")
