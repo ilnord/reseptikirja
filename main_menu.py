@@ -16,7 +16,7 @@ class Main(object):
                                   "4. Tarkastele tamanhetkista varastoa", "0. Sulje ohjelma"]
         self.search_menu_options = ["1. Etsi kaikki reseptit, jotka valmistettavissa varastossa olevista raaka-aineista", "2. Etsi kaikki reseptit, jotka sisaltavat tiettyja raaka-aineita", \
                                     "3. Etsi reseptit, jotka eivat sisalla tiettyja aineita", "4. Etsi reseptit, jotka eivat sisalla tiettya allergeenia",\
-                                     "5. Etsi reseptit, joista puuttuu N-määrä raaka-aineita varastosta", "0. Takaisin"]
+                                     "5. Etsi reseptit, joista puuttuu korkeintaa N-määrä raaka-aineita varastosta", "0. Takaisin"]
         self.inventory_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa varasto", "0. Takaisin"]
         self.recipes_menu_options = ["1. Etsi tietty resepti ja tulosta sen tiedot", "2. Listaa kaikki reseptit ja niiden tiedot", "0. Takaisin"]
         self.ingredients_menu_options = ["1. Etsi tietty raaka-aine", "2. Listaa raaka-aineet", "0. Takaisin"]
@@ -30,9 +30,9 @@ class Main(object):
         f_storage = open('Storage.txt', 'r')
         f_recipe = open('Recipelist.txt', 'r')
         f_ingredients = open('Ingredientlist.txt', 'r')
-        self.ingredients_list, succesfull_reads, failed_reads = self.IO.read_ingredients_from_file(f_ingredients)
-        self.storage_list, succesfull_reads, failed_reads = self.IO.read_storage_from_file(f_storage, self.ingredients_list)
-        self.recipes_list, succesfull_reads, failed_reads = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)
+        self.ingredients_list = self.IO.read_ingredients_from_file(f_ingredients)[0]
+        self.storage_list = self.IO.read_storage_from_file(f_storage, self.ingredients_list)[0]
+        self.recipes_list = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)[0]
         f_storage.close()
         f_recipe.close()
         f_ingredients.close()
@@ -81,6 +81,8 @@ class Main(object):
                 self.ingredients_menu()
             elif user_input == 0:
                 return 0
+      
+      
             
     def search_menu(self):
         while True:
@@ -114,13 +116,27 @@ class Main(object):
                 self.makeable_recipes = []
                 
             elif user_input == 4:
-                print("Tietoja")
+                input_temp = self.ask_for_input_string\
+                    ("Mita allergeeneja et halua reseptin sisaltavan? Anna allergeenit pilkulla eroteltuna")
+                allergens = self.input_text_to_list(input_temp)
+                self.makeable_recipes = self.Find_recipes.find_no_allergens(allergens)
+                if not self.makeable_recipes:
+                    print("Annetuilla allergeeneilla ei voida valmistaa yhtakaan reseptia")
+                for recipe in self.makeable_recipes:
+                    self.print_recipes(recipe)
+                    
             elif user_input == 5:
-                print("Tietoja")
-            elif user_input == 1:
-                print("Tietoja")
+                n = self.ask_for_input\
+                    ("Kuina monta raaka-ainetta reseptista saa puuttua?")
+                self.makeable_recipes = self.Find_recipes.find_missing_n_ingredients(n)
+                if not self.makeable_recipes:
+                    print("Annetulla puuttuvien raaka-aineiden maksimilla ei voi valmistaa yhtakaan reseptia")
+                for recipe in self.makeable_recipes:
+                    self.print_recipes(recipe)
+                    
             elif user_input == 0:
                 return 0
+            
             
     def print_recipes(self, recipe):
         print(recipe.get_name().upper())

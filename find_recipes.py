@@ -178,6 +178,7 @@ class Find_recipes:
     '''
     
     def find_no_allergens(self, allergens):
+        self.makeable_recipes = []
         for recipe in self.recipes_list:
             recipe_allowed = True
             for recipe_ingredient in recipe.get_ingredients():
