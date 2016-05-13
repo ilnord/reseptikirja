@@ -3,7 +3,7 @@ Created on Apr 20, 2016
 @author: saarnii1
 '''
 # -*- coding: utf-8 -*-
-from ingredient import Ingredient, Ingredient_container
+from ingredient import Ingredient, Ingredient_holder
 from recipe import Recipe
 
 class IO(object):
@@ -22,7 +22,7 @@ class IO(object):
             current_line = input_data.readline()
             header_parts = current_line.split(" ")
             
-            if header_parts[0].strip() != "INGREDIENTLIST" :   
+            if header_parts[0].strip() != "INGREDIENTS" :   
                 raise OSError("Tuntematon tiedostotyyppi")
             
             current_line = input_data.readline()
@@ -97,11 +97,10 @@ class IO(object):
         current_line = ''
         
         try:
-            #input_data = open(filename, 'w')
             current_line = input_data.readline()
             header_parts = current_line.split(" ")
             
-            if header_parts[0].strip() != "RECIPELIST" :   
+            if header_parts[0].strip() != "RECIPES" :   
                 raise OSError("Tuntematon tiedostotyyppi")
             
             current_line = input_data.readline()
@@ -120,37 +119,30 @@ class IO(object):
                         elif header_parts[0].strip().lower() == 'name':
                             self.recipe.set_name(header_parts[1].strip())
                             self.name = header_parts[1].strip()
-                            #print(self.recipe.get_name())
                             
                         elif header_parts[0].strip().lower() == 'instructions':
                             self.recipe.set_instructions(header_parts[1].strip())
                             self.instructions = True
-                            #print(self.recipe.get_instructions())
-                            
-                            
+                                                      
                         elif header_parts[0].strip().lower() == 'outcome':
                             if len(header_parts) != 3: break
                             self.recipe.set_outcome_amount(header_parts[1].strip())
                             self.recipe.set_outcome_unit(header_parts[2].strip())
                             self.outcome = True
-                            #print(self.recipe.get_outcome_amount())
-                            #print(self.recipe.get_outcome_unit())
                             
                         elif header_parts[0].strip().lower() == 'ingredient':
                             if len(header_parts) != 4:
                                 self.ingredients = False
                                 break
-                            self.ingredient_container = Ingredient_container()
-                            if self.ingredient_container.set_ingredient(header_parts[1].strip(), ingredients_list):
+                            self.ingredient_holder = Ingredient_holder()
+                            if self.ingredient_holder.set_ingredient(header_parts[1].strip(), ingredients_list):
                                 self.ingredients = True
                             else:
                                 self.ingredients = False
                                 break
-                            self.ingredient_container.set_amount(header_parts[2].strip())
-                            self.ingredient_container.set_unit(header_parts[3].strip())
-                            self.recipe.add_ingredients(self.ingredient_container)
-                            #print(self.ingredient_container.get_amount())
-                            #print(self.ingredient_container.get_unit())
+                            self.ingredient_holder.set_amount(header_parts[2].strip())
+                            self.ingredient_holder.set_unit(header_parts[3].strip())
+                            self.recipe.add_ingredients(self.ingredient_holder)
                                 
                         current_line = input_data.readline()
                         header_parts = current_line.split(":")
@@ -194,7 +186,7 @@ class IO(object):
             current_line = input_data.readline()
             header_parts = current_line.split(";")
             
-            if header_parts[0].strip() != "STORAGELIST" :   
+            if header_parts[0].strip() != "STORAGE" :   
                 raise OSError("Tuntematon tiedostotyyppi")
             
             current_line = input_data.readline()
@@ -202,12 +194,12 @@ class IO(object):
             
             while current_line != '': 
                 if len(header_parts) > 2:
-                    self.ingredient_container = Ingredient_container()
-                    if not self.ingredient_container.set_ingredient(header_parts[0].strip(), ingredients_list):
+                    self.ingredient_holder = Ingredient_holder()
+                    if not self.ingredient_holder.set_ingredient(header_parts[0].strip(), ingredients_list):
                         self.ingredients = False
                     else:
-                        self.ingredient_container.set_amount(header_parts[1].strip())
-                        self.ingredient_container.set_unit(header_parts[2].strip())
+                        self.ingredient_holder.set_amount(header_parts[1].strip())
+                        self.ingredient_holder.set_unit(header_parts[2].strip())
                         self.success = True
                         
                 if not self.success:
@@ -216,7 +208,7 @@ class IO(object):
                     self.success = None
                 elif self.success:
                     self.succesfull_reads += 1
-                    self.storage_list.append(self.ingredient_container)
+                    self.storage_list.append(self.ingredient_holder)
                     self.success = None
                 current_line = input_data.readline()
                 header_parts = current_line.split(";")

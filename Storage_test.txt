@@ -1,4 +1,4 @@
-STORAGELIST
+STORAGE
 riisi;10;kg
 mehu;1;dl
 

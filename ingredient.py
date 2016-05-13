@@ -61,7 +61,7 @@ class Ingredient:
     def get_allergens(self):
         return self.allergens
     
-class Ingredient_container:
+class Ingredient_holder:
     def __init__(self):
         self.ingredient = None
         self.amount = None

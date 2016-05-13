@@ -8,7 +8,6 @@ from recipe import Recipe
 from IO import IO         
 from ingredient import Ingredient
 from unit_transfer import Unit_transfer
-from numpy.core.numeric import False_
 
 G = 0
 KG = 1
@@ -31,14 +30,11 @@ class Find_recipes:
         self.IO = IO()
         self.Unit_transfer = Unit_transfer()
         f_storage = open('Storage.txt', 'r')
-        f_recipe = open('Recipelist.txt', 'r')
-        f_ingredients = open('Ingredientlist.txt', 'r')
-        self.ingredients_list, succesfull_reads, failed_reads = self.IO.read_ingredients_from_file(f_ingredients)
-        self.storage_list, succesfull_reads, failed_reads = self.IO.read_storage_from_file(f_storage, self.ingredients_list)
-        self.recipes_list, succesfull_reads, failed_reads = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)
-        #print(self.ingredients_list)
-        #print(self.storage_list)
-        #print(self.recipes_list)
+        f_recipe = open('Recipes.txt', 'r')
+        f_ingredients = open('Ingredients.txt', 'r')
+        self.ingredients_list = self.IO.read_ingredients_from_file(f_ingredients)[0]
+        self.storage_list = self.IO.read_storage_from_file(f_storage, self.ingredients_list)[0]
+        self.recipes_list = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)[0]
         f_storage.close()
         f_recipe.close()
         f_ingredients.close()
@@ -55,15 +51,10 @@ class Find_recipes:
                 return False
         else:
             wanted_unit = recipe_ingredient.get_unit()
-            #print(wanted_unit)
             received_unit = storage_ingredient.get_unit()
-            #print(received_unit)
             density = recipe_ingredient.get_ingredients().get_density()
-            #print(density)
             received_amount = storage_ingredient.get_amount()
-            #print(received_amount)
             self.storage_ingredient_transferred_amount = self.Unit_transfer.unit_transfer(received_unit, wanted_unit, received_amount, density)
-            #print(self.storage_ingredient_transferred_amount)
             if recipe_ingredient.get_amount() < self.storage_ingredient_transferred_amount:
                 return True
             else:
@@ -83,21 +74,13 @@ class Find_recipes:
         for recipe_ingredient in recipe.get_ingredients():
             for storage_ingredient in self.storage_list:
                 if recipe_ingredient.get_ingredients().get_name() == storage_ingredient.get_ingredients().get_name():
-                    #print(recipe_ingredient.get_ingredients().get_name())
-                    #print(storage_ingredient.get_ingredients().get_name())
-                    #print("loyty match")
                     if self.check_ingredient_amount(recipe_ingredient, storage_ingredient):
                         ingredients_found += 1
                     elif recipe_ingredient.get_ingredients().get_recipe() != None:
                         #print("raaka-ainetta ei tarpeeksi, valmistetaan lisaa varastosta")
                         recipe_object = recipe_ingredient.get_ingredients().get_recipe_object(self.recipes_list)
-                        #print(recipe_object.get_name())
-                        #print("tarvittavat osumat =", len(recipe_object.get_ingredients()))
-                        #print(recipe_object.get_ingredients()[0].get_ingredients().get_name())
-                        #print(recipe_object.get_ingredients()[1].get_ingredients().get_name())
                         ingredients_found_temp, loop_counter = self.check_for_ingredients(recipe_object, (loop_counter + 1))
                         if ingredients_found_temp == len(recipe.get_ingredients()) and loop_counter < 2:
-                            #print("ASDASDASDASDASDASDASD", loop_counter)
                             ingredients_found += (1 + loop_counter) 
                     break
         return ingredients_found, loop_counter
@@ -127,9 +110,6 @@ class Find_recipes:
             recipe_allowed = True
             for recipe_ingredient in recipe.get_ingredients():
                 for ingredient in ingredients:
-                    #print(ingredient)
-                    #print(recipe_ingredient.get_ingredients().get_name())
-                    #print(len(recipe.get_ingredients()))
                     if recipe_ingredient.get_ingredients().get_name() == ingredient:
                         recipe_allowed = False
                         break
@@ -162,20 +142,8 @@ class Find_recipes:
                 self.makeable_recipes.append(recipe)
                 recipe_hitcount = 0
         return self.makeable_recipes
-    '''  
-    def find_no_allergens(self, allergens):
-        for recipe in self.recipes_list:
-            recipe_allowed = True
-            for recipe_ingredient in recipe.get_ingredients():
-                for allergen in allergens:
-                    print(recipe_ingredient.get_ingredients().get_allergens())
-                    if recipe_ingredient.get_ingredients().get_allergens() == allergen:
-                        recipe_allowed =  False
-                        break
-            if recipe_allowed == True:
-                self.makeable_recipes.append(recipe)
-        return self.makeable_recipes
-    '''
+    
+    
     
     def find_no_allergens(self, allergens):
         self.makeable_recipes = []

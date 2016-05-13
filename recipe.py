@@ -29,9 +29,9 @@ class Recipe:
         #Asettaa (ja lisaa) reseptille ohjeita
         self.instructions.append(instructions)
         
-    def add_ingredients(self, Ingredient_container):
+    def add_ingredients(self, Ingredient_holder):
         #Lisaa reseptiin ainesosia
-        self.ingredients.append(Ingredient_container)
+        self.ingredients.append(Ingredient_holder)
 
         
     def set_outcome_amount(self, outcome_amount):

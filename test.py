@@ -4,7 +4,6 @@ Created on 23.4.2016
 @author: Ilkka
 '''
 # -*- coding: utf-8 -*-
-from pip.utils.outdated import SELFCHECK_DATE_FMT
 
 G = 0
 KG = 1
@@ -19,9 +18,8 @@ PORTION = 8
 import unittest
 from main_menu import Main
 from IO import IO
-from ingredient import Ingredient, Ingredient_container
+from ingredient import Ingredient
 from io import StringIO
-from recipe import Recipe
 from unit_transfer import Unit_transfer
 from find_recipes import Find_recipes
 
@@ -36,8 +34,8 @@ class Test(unittest.TestCase):
         self.IO = IO()
         self.Unit_transfer = Unit_transfer()
         f_storage = open('Storage.txt', 'r')
-        f_recipe = open('Recipelist.txt', 'r')
-        f_ingredients = open('Ingredientlist.txt', 'r')
+        f_recipe = open('Recipes.txt', 'r')
+        f_ingredients = open('Ingredients.txt', 'r')
         self.ingredients_list, succesfull_reads, failed_reads = self.IO.read_ingredients_from_file(f_ingredients)
         self.storage_list, succesfull_reads, failed_reads = self.IO.read_storage_from_file(f_storage, self.ingredients_list)
         self.recipes_list, succesfull_reads, failed_reads = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)
@@ -87,7 +85,7 @@ class Test(unittest.TestCase):
     def test_read_ingredients_from_file(self):
         
         self.input_file = StringIO()
-        self.input_file.write('INGREDIENTLIST\n\n')
+        self.input_file.write('INGREDIENTS\n\n')
         self.input_file.write('#Ingredient\n')
         self.input_file.write('Name             : Kala')
         self.input_file.write('\nDensity            : 3\n')
@@ -116,7 +114,7 @@ class Test(unittest.TestCase):
             self.assertEqual(["Kala","Ruodot"], ingredient.get_allergens(), "")
             
     def test_read_ingredients_from_actual_file(self):
-        f = open('Ingredientlist_test.txt', 'r')
+        f = open('Ingredients_test.txt', 'r')
         ingredients_list, successfull_reads, failed_reads = self.IO.read_ingredients_from_file(f)
         f.close()
         self.assertEqual(2, successfull_reads,"Onnistuneiden lukujen maara ei tasmaa")
@@ -131,7 +129,7 @@ class Test(unittest.TestCase):
     def test_read_recipes_from_file(self):
          
         self.input_file = StringIO()
-        self.input_file.write('RECIPELIST\n\n')
+        self.input_file.write('RECIPES\n\n')
         self.input_file.write('#Recipe\n')
         self.input_file.write('\nName            : Paistettu riisi\n')
         self.input_file.write('\nOutcome            : 4: portion\n')
@@ -168,14 +166,14 @@ class Test(unittest.TestCase):
     
     
     def test_read_recipes_from_actual_file(self):
-        f1 = open('Ingredientlist_test.txt', 'r')
+        f1 = open('Ingredients_test.txt', 'r')
         ingredients_list, successfull_reads_i, failed_reads_i = self.IO.read_ingredients_from_file(f1)
         f1.close()
         
         self.assertEqual(2, successfull_reads_i, "Onnistuneiden lukujen maara ei tasmaa")
         self.assertEqual(1, failed_reads_i, "Epaonnistuneiden lukujen maara ei tasmaa")
         
-        f2 = open('Recipelist_test.txt', 'r')
+        f2 = open('Recipes_test.txt', 'r')
         recipes_list, successfull_reads, failed_reads = self.IO.read_recipes_from_file(f2, ingredients_list)
         f2.close()
         
@@ -196,7 +194,7 @@ class Test(unittest.TestCase):
     def test_read_storage_from_file(self):
         
         self.input_file = StringIO()
-        self.input_file.write('STORAGELIST\n')
+        self.input_file.write('STORAGE\n')
         self.input_file.write('riisi;10;kg\n')
         self.input_file.write('asdpoks\n')
         self.input_file.write('mehu;1;dl\n')
@@ -301,15 +299,15 @@ class Test(unittest.TestCase):
         mandatory_ingredients = ["mehu", "mansikka"]
         makeable_recipes = self.Find_recipes.find_must_include(mandatory_ingredients)
         print(mandatory_ingredients)
-        for recipe in makeable_recipes:
-            print(recipe.get_name())
+        #for recipe in makeable_recipes:
+        #    print(recipe.get_name())
         self.assertEqual(1, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aineet mehu ja mansikka ovat pakolliset")
         
         mandatory_ingredients2 = ["riisi", "kala"]
         makeable_recipes = self.Find_recipes.find_must_include(mandatory_ingredients2)
         print(mandatory_ingredients2)
-        for recipe in makeable_recipes:
-            print(recipe.get_name())
+        #for recipe in makeable_recipes:
+        #    print(recipe.get_name())
         self.assertEqual(1, len(makeable_recipes), "Valmistettavissa olevien reseptien maara ei tasmaa kun raaka-aine riisi on pakollinen")
         
     def test_find_no_allergens(self):

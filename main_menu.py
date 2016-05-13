@@ -5,7 +5,7 @@ Created on 19.4.2016
 # -*- coding: utf-8 -*-
 from find_recipes import Find_recipes
 from recipe import Recipe
-from ingredient import Ingredient, Ingredient_container
+from ingredient import Ingredient
 from IO import IO
 
 class Main(object):
@@ -28,8 +28,8 @@ class Main(object):
         self.test_mode = False
         self.makeable_recipes = []
         f_storage = open('Storage.txt', 'r')
-        f_recipe = open('Recipelist.txt', 'r')
-        f_ingredients = open('Ingredientlist.txt', 'r')
+        f_recipe = open('Recipes.txt', 'r')
+        f_ingredients = open('Ingredients.txt', 'r')
         self.ingredients_list = self.IO.read_ingredients_from_file(f_ingredients)[0]
         self.storage_list = self.IO.read_storage_from_file(f_storage, self.ingredients_list)[0]
         self.recipes_list = self.IO.read_recipes_from_file(f_recipe, self.ingredients_list)[0]
@@ -53,8 +53,14 @@ class Main(object):
         user_input = input(question)
         if self.test_mode:
             user_input = question
-        user_input = int(user_input)  
-        return user_input
+        while True:
+            try:
+                user_input = int(user_input)  
+                return user_input
+            except ValueError:
+                print("Annettu arvo ei ole kokonaisluku")
+            user_input = input(question)
+                
     def ask_for_input_string(self, question):
         user_input = input(question)
         return user_input
