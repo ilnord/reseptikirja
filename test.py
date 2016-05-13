@@ -27,10 +27,9 @@ class Test(unittest.TestCase):
     
     def setUp(self):
         
-        #Main program setUp
         self.main_test = Main()
         self.main_test.test_mode = True
-        #IO setUp
+
         self.IO = IO()
         self.Unit_transfer = Unit_transfer()
         f_storage = open('Storage.txt', 'r')
@@ -56,7 +55,6 @@ class Test(unittest.TestCase):
         wanted_unit = L
         amount = 50
         density = 1
-        
         received_amount = self.Unit_transfer.unit_transfer(unit, wanted_unit, amount, density)
         self.assertEqual(0.75, received_amount, "Saatu maara ei tasmaa")
     
@@ -85,18 +83,19 @@ class Test(unittest.TestCase):
     def test_read_ingredients_from_file(self):
         
         self.input_file = StringIO()
+        
         self.input_file.write('INGREDIENTS\n\n')
         self.input_file.write('#Ingredient\n')
         self.input_file.write('Name             : Kala')
         self.input_file.write('\nDensity            : 3\n')
-        self.input_file.write('\nRecipe     : \n')
+        self.input_file.write('\nRecipe         : \n')
         self.input_file.write('\nAllergen     : Kala\n')
         self.input_file.write('\nAllergen     : Ruodot\n')
         
         self.input_file.write('#Ingredient\n')
-        self.input_file.write('Name             : Kakku\n')
+        self.input_file.write('Name                 : Kakku\n')
         self.input_file.write('\nDensity            : asd\n')
-        self.input_file.write('\nRecipe     : \n')
+        self.input_file.write('\nRecipe         : \n')
         self.input_file.write('\nAllergen     : Kananmuna\n')
         self.input_file.write('\nAllergen     : Laktoosi\n')
         
@@ -195,9 +194,9 @@ class Test(unittest.TestCase):
         
         self.input_file = StringIO()
         self.input_file.write('STORAGE\n')
-        self.input_file.write('riisi;10;kg\n')
+        self.input_file.write('riisi:10:kg\n')
         self.input_file.write('asdpoks\n')
-        self.input_file.write('mehu;1;dl\n')
+        self.input_file.write('mehu:1:dl\n')
 
         self.input_file.seek(0, 0) 
         

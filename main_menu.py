@@ -13,7 +13,7 @@ class Main(object):
     def __init__(self):
         #Luodaan menut ja submenut
         self.main_menu_options = ["1. Hae resepteja", "2. Tarkastele tunnettuja resepeja", "3. Tarkastele tunnettuja raaka-aineita", \
-                                  "4. Tarkastele tamanhetkista varastoa", "0. Sulje ohjelma"]
+                                  "4. Tarkastele tämänhetkista varastoa", "0. Sulje ohjelma"]
         self.search_menu_options = ["1. Etsi kaikki reseptit, jotka valmistettavissa varastossa olevista raaka-aineista", "2. Etsi kaikki reseptit, jotka sisaltavat tiettyja raaka-aineita", \
                                     "3. Etsi reseptit, jotka eivat sisalla tiettyja aineita", "4. Etsi reseptit, jotka eivat sisalla tiettya allergeenia",\
                                      "5. Etsi reseptit, joista puuttuu korkeintaa N-määrä raaka-aineita varastosta", "0. Takaisin"]
@@ -43,7 +43,7 @@ class Main(object):
             print(i)
         
         while True:
-            user_input = self.ask_for_input("Mitä haluaisit tehdä?  ")
+            user_input = self.ask_for_input("Miten haluat edetä?  ")
             if user_input >= 0 and user_input < len(menu_options):
                 return user_input
             else:
@@ -82,9 +82,9 @@ class Main(object):
             elif user_input == 2:
                 self.recipes_menu()
             elif user_input == 3:
-                self.inventory_menu()()
-            elif user_input == 4:
                 self.ingredients_menu()
+            elif user_input == 4:
+                self.inventory_menu()
             elif user_input == 0:
                 return 0
       
@@ -101,7 +101,7 @@ class Main(object):
                 
             elif user_input == 2:
                 input_temp = self.ask_for_input_string\
-                    ("Mita kaikkia raaka-aineita haluat reseptien sisaltavan? Anna raaka-aineet pilkulla eroteltuna")
+                    ("Mita kaikkia raaka-aineita haluat reseptien sisaltavan? Anna raaka-aineet pilkulla eroteltuna\n")
                 must_include_ingredients = self.input_text_to_list(input_temp)
                 self.makeable_recipes = self.Find_recipes.find_must_include(must_include_ingredients)
                 if not self.makeable_recipes:
@@ -112,7 +112,7 @@ class Main(object):
                 
             elif user_input == 3:
                 input_temp = self.ask_for_input_string\
-                    ("Mita raaka-aineita et halua reseptien sisaltavan? Anna raaka-aineet pilkulla eroteltuna")
+                    ("Mita raaka-aineita et halua reseptien sisaltavan? Anna raaka-aineet pilkulla eroteltuna\n")
                 forbidden_ingredients = self.input_text_to_list(input_temp)
                 self.makeable_recipes = self.Find_recipes.find_must_not_include(forbidden_ingredients)
                 if not self.makeable_recipes:
@@ -123,7 +123,7 @@ class Main(object):
                 
             elif user_input == 4:
                 input_temp = self.ask_for_input_string\
-                    ("Mita allergeeneja et halua reseptin sisaltavan? Anna allergeenit pilkulla eroteltuna")
+                    ("Mita allergeeneja et halua reseptin sisaltavan? Anna allergeenit pilkulla eroteltuna\n")
                 allergens = self.input_text_to_list(input_temp)
                 self.makeable_recipes = self.Find_recipes.find_no_allergens(allergens)
                 if not self.makeable_recipes:
@@ -133,7 +133,7 @@ class Main(object):
                     
             elif user_input == 5:
                 n = self.ask_for_input\
-                    ("Kuina monta raaka-ainetta reseptista saa puuttua?")
+                    ("Kuina monta raaka-ainetta reseptista saa puuttua?\n")
                 self.makeable_recipes = self.Find_recipes.find_missing_n_ingredients(n)
                 if not self.makeable_recipes:
                     print("Annetulla puuttuvien raaka-aineiden maksimilla ei voi valmistaa yhtakaan reseptia")
@@ -143,6 +143,8 @@ class Main(object):
             elif user_input == 0:
                 return 0
             
+          
+          
             
     def print_recipes(self, recipe):
         print(recipe.get_name().upper())
@@ -157,15 +159,17 @@ class Main(object):
         
     def recipes_menu(self):
         user_input = self.run_menu(self.recipes_menu_options)
+        found = False
         if user_input == 1:
             input_temp = self.ask_for_input_string\
-                ("Minka reseptin tiedot haluat nakyviin?")
+                ("Minka reseptin tiedot haluat näkyviin?\n")
             wanted_recipe = self.format_input(input_temp)
             for recipe in self.recipes_list:
                 if recipe.get_name() == wanted_recipe:
                     self.print_recipes(recipe)
-                    exit
-            print("Haluttua reseptia ei loytynyt")
+                    found = True
+            if found == False:
+                print("Haluttua reseptia ei löytynyt")
                 
             
         elif user_input == 2:
@@ -175,28 +179,69 @@ class Main(object):
         elif user_input == 0:
             return 0
         
-                 
-    def inventory_menu(self):
-        user_input = self.run_menu(self.inventory_menu_options)
-        if user_input == 1:
-            print("asd")
-        elif user_input == 2:
-            print("Varastotilanne")
-        elif user_input == 0:
-            return 0
+        
+        
+    def print_ingredients(self, ingredient):
+        print(ingredient.get_name().upper())
+        print("Raaka-aineen tiheys: ", ingredient.get_density())
+        print("\n")
         
         
         
     def ingredients_menu(self):
         user_input = self.run_menu(self.ingredients_menu_options)
+        found = False
         if user_input == 1:
-            print("Lisätietoja")
+            input_temp = self.ask_for_input_string\
+                ("Minkä raaka-aineen tiedot haluat näkyviin?\n")
+            wanted_ingredient = self.format_input(input_temp)
+            for ingredient in self.ingredients_list:
+                if ingredient.get_name() == wanted_ingredient:
+                    self.print_ingredients(ingredient)
+                    found = True
+            if found == False:
+                print("Haluttua raaka-ainetta ei löytynyt")
+                
         elif user_input == 2:
-            print("Listataan raaka-aineet")
+            for ingredient in self.ingredients_list:
+                self.print_ingredients(ingredient)
+                
+
+        elif user_input == 0:
+            return 0   
+                 
+                 
+                 
+                 
+    def print_storage_item(self, storage_item):
+        print (storage_item.get_ingredients().get_name().upper())
+        print ("Määrä varastossa:", storage_item.get_amount(), storage_item.get_unit())
+    
+               
+    def inventory_menu(self):
+        user_input = self.run_menu(self.inventory_menu_options)
+        if user_input == 1:
+            input_temp = self.ask_for_input_string\
+                ("Minka aineen varastotiedot tiedot haluat näkyviin?\n")
+            wanted_storage_item = self.format_input(input_temp)
+            for storage_item in self.storage_list:
+                if storage_item.get_ingredients().get_name() == wanted_storage_item:
+                    self.print_storage_item(storage_item)
+                    
+                    
+        elif user_input == 2:
+            for storage_item in self.storage_list:
+                self.print_storage_item(storage_item)
+                
+                
         elif user_input == 0:
             return 0
+        
+        
+        
+
     
 if __name__ == "__main__":
     program = Main()
     program.main_menu()
-    print("Exit")
+    print("Exiting")

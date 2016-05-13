@@ -77,7 +77,6 @@ class Find_recipes:
                     if self.check_ingredient_amount(recipe_ingredient, storage_ingredient):
                         ingredients_found += 1
                     elif recipe_ingredient.get_ingredients().get_recipe() != None:
-                        #print("raaka-ainetta ei tarpeeksi, valmistetaan lisaa varastosta")
                         recipe_object = recipe_ingredient.get_ingredients().get_recipe_object(self.recipes_list)
                         ingredients_found_temp, loop_counter = self.check_for_ingredients(recipe_object, (loop_counter + 1))
                         if ingredients_found_temp == len(recipe.get_ingredients()) and loop_counter < 2:

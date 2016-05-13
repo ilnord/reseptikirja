@@ -77,8 +77,7 @@ class IO(object):
                 else:
                     current_line = input_data.readline()
                     header_parts = current_line.split(" ")
-                    
-            #input_data.close()     
+                       
             return self.ingredient_list, self.succesfull_reads, self.failed_reads
         except OSError:
             print("Tiedoston avaaminen ei onnistunut")
@@ -164,8 +163,7 @@ class IO(object):
                 else:
                     current_line = input_data.readline()
                     header_parts = current_line.split(" ")
-                    
-            #input_data.close()     
+                        
             return self.recipes_list, self.succesfull_reads, self.failed_reads
         except OSError:
             print("Tiedoston avaaminen ei onnistunut")
@@ -184,13 +182,13 @@ class IO(object):
         try:
             #input_data = open(filename, 'w')
             current_line = input_data.readline()
-            header_parts = current_line.split(";")
+            header_parts = current_line.split(":")
             
             if header_parts[0].strip() != "STORAGE" :   
                 raise OSError("Tuntematon tiedostotyyppi")
             
             current_line = input_data.readline()
-            header_parts = current_line.split(";")
+            header_parts = current_line.split(":")
             
             while current_line != '': 
                 if len(header_parts) > 2:
@@ -211,7 +209,7 @@ class IO(object):
                     self.storage_list.append(self.ingredient_holder)
                     self.success = None
                 current_line = input_data.readline()
-                header_parts = current_line.split(";")
+                header_parts = current_line.split(":")
                 
             return self.storage_list, self.succesfull_reads, self.failed_reads
         
