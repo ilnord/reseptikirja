@@ -103,8 +103,8 @@ class Find_recipes:
     
     
     def find_must_not_include(self, ingredients):
+        #etsii reseptit, jotka eivat saa sisaltaa tiettyja raaka-aineita
         self.makeable_recipes = []
-        #etsii reseptit, jotka eivat saa sisaltaa tiettya raaka-ainetta
         for recipe in self.recipes_list:
             recipe_allowed = True
             for recipe_ingredient in recipe.get_ingredients():
@@ -112,13 +112,9 @@ class Find_recipes:
                     if recipe_ingredient.get_ingredients().get_name() == ingredient:
                         recipe_allowed = False
                         break
-                        #if allowed_ingredient == len(recipe.get_ingredients()):
-                        #    self.makeable_recipes.append(recipe)
+
             if recipe_allowed == True:
                     self.makeable_recipes.append(recipe)
-        #for recipes in self.makeable_recipes:
-            #for recipes_ingredient in recipes.get_ingredients():
-                #print(recipes_ingredient.get_ingredients().get_name())
         return self.makeable_recipes        
     
     def find_must_include(self, ingredients):
@@ -129,9 +125,6 @@ class Find_recipes:
             recipe_hitcount = 0
             for recipe_ingredient in recipe.get_ingredients():
                 for ingredient in ingredients:
-                    #print(ingredient)
-                    #print(recipe_ingredient.get_ingredients().get_name())
-                    #print(len(recipe.get_ingredients()))
                     if recipe_ingredient.get_ingredients().get_name() == ingredient:
                         recipe_hitcount += 1
                         if recipe_hitcount == len(ingredients):
@@ -145,15 +138,16 @@ class Find_recipes:
     
     
     def find_no_allergens(self, allergens):
-        self.makeable_recipes = []
-        for recipe in self.recipes_list:
-            recipe_allowed = True
-            for recipe_ingredient in recipe.get_ingredients():
-                for allergen_recipe in recipe_ingredient.get_ingredients().get_allergens():
-                    for allergen_forbidden in allergens:
-                        if allergen_recipe == allergen_forbidden:
-                            recipe_allowed =  False
+        #Etsii reseptit, jotka eivat sisalla maarattyja allergeeneja
+        self.makeable_recipes = []      #Alustetaan lista, johon ehdot tayttavat raaka-aineet lisataan.
+        for recipe in self.recipes_list:  #Silmukka, jossa kaydaan lapi kaikki tunnetut reseptit
+            recipe_allowed = True           #Maaritetaan resepti alustavasti sallituksi
+            for recipe_ingredient in recipe.get_ingredients(): #Silmukka, jossa kaydaan lapi kaikki reseptin sisaltamat raaka-aineet
+                for allergen_recipe in recipe_ingredient.get_ingredients().get_allergens():  #Silmuka jossa kaydaan lapi kaikki askeisen silmukan loytamien raaka-aineiden allergeenit
+                    for allergen_forbidden in allergens:        #Silmukka jossa kaydaan lapi kaikki allergeenit
+                        if allergen_recipe == allergen_forbidden:   #Tarkistetaan onko reseptin sisaltama allergeeni kiellettyjen allergeenien joukossa
+                            recipe_allowed =  False         #Jos allergeeni kielletty, hylataan resepti ja rikotaan loop
                             break
-            if recipe_allowed == True:
+            if recipe_allowed == True:                      #Resepti tarkistettu kiellettyjen allergeenien varalta: lisataan valmistetavissa olevien reseptien listaan
                 self.makeable_recipes.append(recipe)
-        return self.makeable_recipes
+        return self.makeable_recipes                        #Palautetaan valmistettavissa olevat reseptit

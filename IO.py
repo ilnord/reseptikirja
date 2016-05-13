@@ -9,7 +9,7 @@ from recipe import Recipe
 class IO(object):
 
     def read_ingredients_from_file(self, input_data):
-        #Lukee raaka-aineet tiedostosta ja palauttaa ne listana olioita
+        #Lukee raaka-aineet tiedostosta ja tallentaa saadut tiedot Ingredient olioon
         self.name = False
         self.density = False
         self.ingredient_list = []
@@ -18,7 +18,6 @@ class IO(object):
         current_line = ''
         
         try:
-            #input_data = open(filename, 'w')
             current_line = input_data.readline()
             header_parts = current_line.split(" ")
             
@@ -41,11 +40,9 @@ class IO(object):
                         elif header_parts[0].strip().lower() == 'name':
                             self.ingredient.set_name(header_parts[1].strip())
                             self.name = header_parts[1].strip()
-                            #print(self.ingredient.get_name())
                             
                         elif header_parts[0].strip().lower() == 'density':
                             if self.ingredient.set_density(header_parts[1].strip()):
-                                #print(self.ingredient.get_density())
                                 self.density = True
                             else:
                                 break
@@ -56,7 +53,6 @@ class IO(object):
                             
                         elif header_parts[0].strip().lower() == 'allergen':
                             self.ingredient.set_allergen(header_parts[1].strip()) 
-                            #print(self.ingredient)
                         
                                 
                         current_line = input_data.readline()
@@ -84,7 +80,7 @@ class IO(object):
             
             
     def read_recipes_from_file(self, input_data, ingredients_list):
-        #Lukee reseptit tiedostosta ja palauttaa ne listana olioita
+        #Lukee reseptit tiedostosta ja tallentaa saadut tiedot resepti olioon
         
         self.name = False
         self.instructions = False
@@ -171,7 +167,7 @@ class IO(object):
 
     
     def read_storage_from_file(self, input_data, ingredients_list):
-        #Lukee varaston lapi ja palauttaa sen listana oloita
+        #Lukee varaston lapi ja tallentaa saadut tiedot Ingredient_container olioon
         
         self.success = None
         self.storage_list = []
@@ -180,7 +176,6 @@ class IO(object):
         current_line = ''
         
         try:
-            #input_data = open(filename, 'w')
             current_line = input_data.readline()
             header_parts = current_line.split(":")
             

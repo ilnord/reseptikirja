@@ -17,7 +17,7 @@ PIECE = 7
 PORTION = 8
 
 class Ingredient:
-    
+    #Raaka aine olio, joka pitaa sisallaan raaka-aineen muuttumattomat tiedot
     def __init__(self):
         self.name = None
         self.density = None
@@ -25,9 +25,11 @@ class Ingredient:
         self.allergens = []
         
     def set_name(self, name):
+        #Asettaa raaka-aineen nimen
         self.name = name
     
     def set_density(self, density):
+        #Asettaa raaka-aineen tiheyden
         try:
             self.density = float(density)
             return True
@@ -35,18 +37,23 @@ class Ingredient:
             return False
         
     def set_allergen(self, allergen):
+        #Asettaa raaka-aineen allergeenit
         self.allergens.append(allergen)
         
     def set_recipe(self, recipe):
+        #Asettaa raaka-aineen reseptin
         self.recipe = recipe
     
     def get_name(self):
+        #Palauttaa raaka-aineen nimen
         return self.name
     
     def get_density(self):
+        #Palauttaa raaka aineen tiheyden
         return self.density
     
     def get_recipe(self):
+        #Palauttaa raaka-aineen tiheyden
         return self.recipe
         
     def get_recipe_object(self, recipes_list):
@@ -59,9 +66,11 @@ class Ingredient:
     
     
     def get_allergens(self):
+        #Palauttaa raaka-aineen allergeenit
         return self.allergens
     
 class Ingredient_holder:
+    #Raka aine olio, joka pitaa sisallaan raaka-aineen tilanteen mukaan muuttuvat tiedot
     def __init__(self):
         self.ingredient = None
         self.amount = None
@@ -92,8 +101,11 @@ class Ingredient_holder:
 
         
     def get_ingredients(self):
+        #Palauttaa kyseessa olevan raaka-aineen
         return self.ingredient
     def get_amount(self):
+        #Palauttaa raaka-aineen maaran
         return self.amount
     def get_unit(self):
+        #Palauttaa raaka aineen yksikon
         return self.unit

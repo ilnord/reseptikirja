@@ -28,6 +28,10 @@ class Unit_transfer:
         self.transferred_amount = None
         
     def unit_string_to_variable(self, unit):
+        '''
+        Mikali vastaanotettu muuttuja on string, muuntaa sen yksikko muuttujaksi.
+        Muussa tapauksessa tulostaa "Tuntematon raaka-aine yksikko"
+        '''
         if unit.upper() == "G":
             unit = G
             return unit
@@ -56,12 +60,15 @@ class Unit_transfer:
             unit = PORTION
             return unit
         else:
-            print("stringin muuntaminen ei onnistunut")
+            print("Tuntematon raaka-aine yksikko")
             return False
         
         
         
     def unit_transfer(self, received_unit, wanted_unit, received_amount, density):
+        '''
+        "Ylafunktio", joka ohjaa saadun syotteen oikeaan paikkaan. 
+        '''
         if received_unit not in mass_units and received_unit not in volume_units:
             received_unit = self.unit_string_to_variable(received_unit)
         if wanted_unit not in mass_units and wanted_unit not in volume_units:
@@ -77,14 +84,17 @@ class Unit_transfer:
         return self.transferred_amount
      
     def mass_to_mass(self, received_unit, wanted_unit, received_amount, density):
+        #Massayksikoiden sisainen muuttaminen
         multiplier = mass_unit_relations[received_unit]/mass_unit_relations[wanted_unit]
         return received_amount * multiplier
     
     def volume_to_volume(self, received_unit, wanted_unit, received_amount, density):
+        #Tilavuusyksikoiden sisainen muuttaminen
         multiplier = volume_unit_relations[received_unit]/volume_unit_relations[wanted_unit]
         return received_amount * multiplier
 
     def mass_to_volume(self, received_unit, wanted_unit, received_amount, density):
+        #Massan muuttaminen tilavuudeksi
         #muutetaan verrokkiarvoihin litra ja kg
         mass_to_kg_multiplier = mass_unit_relations[received_unit]/mass_unit_relations[KG]
         volume_to_l_multiplier = volume_unit_relations[wanted_unit]/ volume_unit_relations[L]
@@ -93,6 +103,7 @@ class Unit_transfer:
         return received_volume_l / volume_to_l_multiplier
     
     def volume_to_mass(self, received_unit, wanted_unit, received_amount, density):
+        #Tilavuuden muuttaminen massaksi
         #muutetaan verrokkiarvoihin litra ja kg
         mass_to_kg_multiplier = mass_unit_relations[wanted_unit]/mass_unit_relations[KG]
         volume_to_l_multiplier = volume_unit_relations[received_unit]/ volume_unit_relations[L]
