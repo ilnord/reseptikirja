@@ -1,0 +1,8 @@
+RECIPES
+#Recipe
+Name            : Kalakakku
+  Outcome            : 4: portion
+Instructions     : paista kala
+Instructions     : tee kakku
+     Ingredient     : kala : 500 : g
+ Ingredient     : kakku : 1 : kg

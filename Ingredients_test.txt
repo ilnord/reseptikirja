@@ -1,0 +1,21 @@
+INGREDIENTS
+#Ingredient
+  Name             : Kala
+ Density            : 3
+ Recipe     : 
+ Allergen     : Kala
+ Allergen     : Ruodot
+        
+#Ingredient
+   Name             : Kakku
+   Density            : asd
+   Recipe     :
+   Allergen     : Kananmuna
+   Allergen     : Laktoosi
+
+#Ingredient
+   Name             : Kakku
+   Density            : 2
+   Recipe     :
+   Allergen     : Kananmuna
+   Allergen     : Laktoosi
